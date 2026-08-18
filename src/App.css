@@ -1,0 +1,165 @@
+/* === Estilos globais === */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-size-adjust: 100%;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* === Animações personalizadas === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.animate-fade-in {
+  animation: fadeIn 0.1s ease-in-out;
+}
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+.float {
+  animation: float 2.5s ease-in-out infinite;
+}
+
+
+.animate-float {
+  animation: float 3.5s ease-in-out infinite;
+}
+
+
+/* === Estilos base com Tailwind === */
+@layer base {
+  html,
+  :host {
+    text-size-adjust: 100%;
+  }
+}
+@layer utilities {
+  .no-font-boost {
+    max-height: 1000000px;
+  }
+}
+/* Evita que o Chrome Android aplique zoom forçado em fontes pequenas */
+.no-font-boost {
+  max-height: 1000000px;
+  font-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+/* ================================
+   FLYERS CAROUSEL (GLOBAL)
+   Escopo: #flyers
+================================ */
+
+/* Scroll horizontal suave */
+#flyers [data-aos] {
+  will-change: transform, opacity;
+}
+
+/* Esconde scrollbar (Chrome, Edge, Safari) */
+#flyers .scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Esconde scrollbar (Firefox) */
+#flyers .scrollbar-hide {
+  scrollbar-width: none;
+}
+
+/* Container do carrossel */
+#flyers .flyers-track {
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+}
+
+/* Card do flyer */
+#flyers .flyer-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+#flyers .flyer-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Imagem */
+#flyers img {
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ================================
+   BOTÕES DE NAVEGAÇÃO
+================================ */
+
+/* Base do botão */
+#flyers .flyer-nav-btn {
+  background: #000;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover desktop */
+@media (hover: hover) {
+  #flyers .flyer-nav-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Active mobile */
+#flyers .flyer-nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* Ícone dourado */
+#flyers .flyer-nav-btn svg {
+  color: #d4af37;
+}
+.float {
+  animation: float 5s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(0deg);
+  }
+
+  75% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+}
+/* ================================
+   RESPONSIVIDADE
+================================ */
+
+/* Ajustes mobile */
+@media (max-width: 768px) {
+  #flyers {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  #flyers .flyer-card {
+    border-radius: 1.25rem;
+  }
+}

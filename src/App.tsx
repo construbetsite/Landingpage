@@ -1,0 +1,352 @@
+"use client";
+
+import { lazy, Suspense } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import "aos/dist/aos.css";
+import "./App.css";
+
+import ScrollingTicker from "./components/ScrollingTicker/ScrollingTicker";
+import Header from "./components/Header/Header";
+import HeaderBlog from "./components/Header/HeaderBlog";
+import HeaderPolitica from "./components/Header/HeaderPolitica";
+import Hero from "./components/Hero/Hero";
+import Footer from "./components/Footer/Footer";
+import ScrollTop from "./components/ScrollTop/ScrollTop";
+import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange/ScrollToTopOnRouteChange";
+import ContactForm from "./components/ContactForm/ContactForm";
+import { HelmetProvider, Helmet } from "react-helmet-async";
+
+import PoliticaEPrivacidade from "./pages/PoliticasEPrivacidade";
+import GoogleMapsSection from "./components/GoogleMapsSection/GoogleMapsSection";
+import FeaturesBar from "./components/FeatureBar/FeatureBar";
+import FeaturedProducts from "./components/FeaturedProducts/FeaturedProducts";
+import BlogSection from "./components/BlogSection/BlogSection";
+import GoogleReviewsWidget from "./components/GoogleReviewsWidget/GoogleReviewsWidget";
+import SocialMediaSection from "./components/SocialMediaSection/SocialMediaSection";
+import CentralDaObra from "./components/CentralDaObra/CentralDaObra";
+import PromocoesSemana from "./components/sections/PromocoesSemana";
+import NossaHistoria from "./components/NossaHistoria/NossaHistoria";
+import EcommerceBanner from "./components/EcommerceBanner/EcommerceBanner";
+
+// =====================================================
+// CODE-SPLITTING: páginas carregadas sob demanda
+// =====================================================
+const BlogPage = lazy(() => import("./pages/BlogPage"));
+const BlogPostDetail = lazy(() => import("./pages/blog/BlogPostDetail"));
+const CalculadoraPiso = lazy(() => import("./pages/CalculadoraPiso"));
+const CalculadoraTinta = lazy(() => import("./pages/CalculadoraTinta"));
+const CalculadoraArgamassa = lazy(() => import("./pages/CalculadoraArgamassa"));
+const CalculadoraRejunte = lazy(() => import("./pages/CalculadoraRejunte"));
+const SolicitarOrcamento = lazy(() => import("./pages/SolicitarOrcamento"));
+const Especialista = lazy(() => import("./pages/Especialista"));
+
+/** Fallback de carregamento para rotas lazy. */
+function PageLoader() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-10 w-10 rounded-full border-4 border-gray-200 border-t-[#072B63] animate-spin" />
+        <p className="text-sm text-gray-500">Carregando…</p>
+      </div>
+    </div>
+  );
+}
+
+function AppContent() {
+  const location = useLocation();
+
+  const pathname = location.pathname.toLowerCase();
+
+  const isBlogPage = pathname.startsWith("/blog");
+
+  const isPoliticaPage =
+    pathname === "/politicas";
+
+  return (
+    <div className="min-h-screen">
+
+      {/* =====================================================
+          HEADER CONTEXTUAL
+          ===================================================== */}
+
+      {isBlogPage ? (
+        <HeaderBlog />
+      ) : isPoliticaPage ? (
+        <HeaderPolitica />
+      ) : (
+        <Header />
+      )}
+
+      {/* =====================================================
+          NAVEGAÇÃO / SCROLL
+          ===================================================== */}
+
+      <ScrollToTopOnRouteChange />
+      <ScrollTop />
+
+      {/* =====================================================
+          ROTAS
+          ===================================================== */}
+
+      <Routes>
+
+        {/* ===================== HOME ===================== */}
+
+        <Route
+          path="/"
+          element={
+            <>
+              <Helmet>
+                <title>
+                  Construbet | Materiais para Construção em Betim - MG
+                </title>
+
+                <meta
+                  name="description"
+                  content="Há mais de 45 anos a Construbet oferece materiais para construção, acabamento, pisos, ferramentas e muito mais em Betim e região. Qualidade, tradição e entrega rápida."
+                />
+
+                <meta
+                  name="keywords"
+                  content="materiais de construção betim, loja de construção betim, cimento betim, porcelanato betim, ferramentas betim, acabamento betim, construbet, materiais para obra betim, loja de materiais de construção mg"
+                />
+
+                <link
+                  rel="canonical"
+                  href="https://www.construbet.com.br"
+                />
+
+                <meta name="robots" content="index, follow" />
+                <meta name="author" content="Construbet" />
+
+                <meta name="geo.region" content="BR-MG" />
+                <meta name="geo.placename" content="Betim" />
+                <meta
+                  name="geo.position"
+                  content="-19.9677;-44.1980"
+                />
+                <meta
+                  name="ICBM"
+                  content="-19.9677, -44.1980"
+                />
+
+                <meta property="og:type" content="website" />
+
+                <meta
+                  property="og:title"
+                  content="Construbet | Materiais para Construção em Betim - MG"
+                />
+
+                <meta
+                  property="og:description"
+                  content="Há mais de 45 anos oferecendo materiais para construção, acabamento e ferramentas com qualidade e tradição em Betim e região."
+                />
+
+                <meta
+                  property="og:image"
+                  content="https://www.construbet.com.br/og-image.jpg"
+                />
+
+                <meta
+                  property="og:url"
+                  content="https://www.construbet.com.br"
+                />
+
+                <meta
+                  property="og:site_name"
+                  content="Construbet"
+                />
+
+                <meta
+                  property="og:locale"
+                  content="pt_BR"
+                />
+
+                <meta
+                  name="twitter:card"
+                  content="summary_large_image"
+                />
+
+                <meta
+                  name="twitter:title"
+                  content="Construbet | Materiais para Construção em Betim"
+                />
+
+                <meta
+                  name="twitter:description"
+                  content="Há mais de 45 anos construindo confiança em Betim. Materiais de qualidade com entrega rápida."
+                />
+
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                      "@context": "https://schema.org",
+                      "@type": "HomeGoodsStore",
+                      name: "Construbet",
+                      image:
+                        "https://www.construbet.com.br/logo.webp",
+                      description:
+                        "Loja de materiais para construção em Betim - MG. Há mais de 45 anos oferecendo qualidade e tradição.",
+                      address: {
+                        "@type": "PostalAddress",
+                        addressLocality: "Betim",
+                        addressRegion: "MG",
+                        addressCountry: "BR",
+                      },
+                      url: "https://www.construbet.com.br",
+                      sameAs: [
+                        "https://www.instagram.com/construbet",
+                        "https://www.facebook.com/construbet",
+                      ],
+                    }),
+                  }}
+                />
+              </Helmet>
+
+              <main className="pt-16 min-h-screen flex flex-col">
+                <Hero />
+
+                <ScrollingTicker />
+
+                <FeaturesBar />
+
+                <FeaturedProducts />
+
+                <EcommerceBanner />
+
+                <section className="relative overflow-hidden bg-[linear-gradient(135deg,#071B46_0%,#0B2E73_100%)]">
+                  <CentralDaObra />
+                </section>
+
+                <ScrollingTicker />
+
+                <BlogSection />
+
+                <PromocoesSemana />
+                <div id="sobre" px-4 sm:px-6 lg:px-8>
+                  <NossaHistoria />
+                </div>
+
+                <ScrollingTicker />
+                <div id="mapa"> 
+                    <GoogleMapsSection />
+                </div>
+
+                <GoogleReviewsWidget />
+
+                <SocialMediaSection />
+
+                <ScrollingTicker />
+                <div id="contato" className="px-4 sm:px-6 lg:px-8">
+                  <ContactForm />
+                </div>  
+              </main>
+            </>
+          }
+        />
+
+        {/* ===================== POLÍTICAS ===================== */}
+
+        <Route
+          path="/politicas"
+          element={<PoliticaEPrivacidade />}
+        />
+
+        {/* ===================== BLOG ===================== */}
+
+        <Route
+          path="/blog"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <BlogPage />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/blog/:slug"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <BlogPostDetail />
+            </Suspense>
+          }
+        />
+
+        {/* ===================== CALCULADORAS ===================== */}
+
+        <Route
+          path="/calculadora/piso"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <CalculadoraPiso />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/calculadora/tinta"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <CalculadoraTinta />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/calculadora/argamassa"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <CalculadoraArgamassa />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/calculadora/rejunte"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <CalculadoraRejunte />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/orcamento"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <SolicitarOrcamento />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/especialista"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <Especialista />
+            </Suspense>
+          }
+        />
+
+      </Routes>
+
+      {/* =====================================================
+          FOOTER
+          ===================================================== */}
+
+      <Footer />
+
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <HelmetProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </HelmetProvider>
+  );
+}

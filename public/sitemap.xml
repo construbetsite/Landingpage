@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+<<<<<<< HEAD
+    <loc>https://blindadosmolasblindex.com.br</loc>
+=======
+    <loc>https://mslsaudeocupacional.com</loc>
+>>>>>>> a8a55d99a9d706255a0e22bc146868586279d6c4
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+<<<<<<< HEAD
+    <loc>https://blindadosmolasblindex.com.br/galeria</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://blindadosmolasblindex.com.br/carta</loc>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://blindadosmolasblindex.com.br/politicas</loc>
+    <priority>0.5</priority>
+  </url>
+</urlset>
+=======
+    <loc>https://mslsaudeocupacional.com/politicas</loc>
+    <priority>0.5</priority>
+  </url>
+</urlset>
+>>>>>>> a8a55d99a9d706255a0e22bc146868586279d6c4

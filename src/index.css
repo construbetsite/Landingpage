@@ -1,0 +1,130 @@
+/* Importações */
+
+html {
+ /* autoprefixer: ignore next */
+-webkit-text-size-adjust: 100%;
+text-size-adjust: 100%;
+
+}
+
+
+@import "tailwindcss";
+
+/* Camada utilities */
+@tailwind utilities;
+
+
+/* Aplica no topo */
+
+/* Utility personalizada para desabilitar font-boosting no Chrome móvel */
+@layer utilities {
+  .no-font-boost {
+    max-height: 1000000px;
+  }
+
+}
+
+
+  /* Ocultar scrollbar mas manter funcionalidade (carrossel mobile) */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+
+/* ============================================================
+   PROSE - Estilos do conteúdo HTML sanitizado do blog
+   ============================================================ */
+.prose-construbet {
+  color: #374151;
+  font-size: 17px;
+  line-height: 1.75;
+}
+.prose-construbet h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #072B63;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.prose-construbet h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #072B63;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+  scroll-margin-top: 6rem;
+}
+.prose-construbet h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #072B63;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  scroll-margin-top: 6rem;
+}
+.prose-construbet p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+}
+.prose-construbet a {
+  color: #DC2626;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-construbet a:hover { color: #B91C1C; }
+.prose-construbet ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.prose-construbet ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.prose-construbet li { margin-bottom: 0.4rem; }
+.prose-construbet strong { color: #072B63; font-weight: 700; }
+.prose-construbet blockquote {
+  border-left: 4px solid #DC2626;
+  padding: 0.5rem 1rem;
+  background: #F9FAFB;
+  color: #4B5563;
+  font-style: italic;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.prose-construbet img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+}
+.prose-construbet code {
+  background: #F3F4F6;
+  color: #B91C1C;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+.prose-construbet pre {
+  background: #1F2937;
+  color: #F9FAFB;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+.prose-construbet pre code { background: transparent; color: inherit; padding: 0; }
+.prose-construbet hr { border: 0; border-top: 1px solid #E5E7EB; margin: 2rem 0; }
+.prose-construbet table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+.prose-construbet th, .prose-construbet td { border: 1px solid #E5E7EB; padding: 0.5rem 0.75rem; }
+.prose-construbet th { background: #F3F4F6; font-weight: 700; color: #072B63; }
+

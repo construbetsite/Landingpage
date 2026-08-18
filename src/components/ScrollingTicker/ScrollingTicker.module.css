@@ -1,0 +1,96 @@
+.tickerSection {
+  width: 100%;
+  overflow: hidden;
+  background-color: #072B63; /* Azul oficial Construbet */
+  color: #ffffff;
+  font-weight: 500;
+  padding: 0.9rem 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tickerInner {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.tickerTrack {
+  display: flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.phrase {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1.8rem;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+.separator {
+  color: #EF4444; /* Vermelho Construbet */
+  margin: 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .tickerSection {
+    padding: 1rem 0;
+  }
+  .phrase {
+    padding: 0 2.2rem;
+    font-size: 1rem;
+  }
+  .separator {
+    margin: 0 1.1rem;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .tickerSection {
+    padding: 0.85rem 0;
+  }
+  .phrase {
+    padding: 0 1.6rem;
+    font-size: 0.95rem;
+  }
+  .separator {
+    margin: 0 0.9rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .tickerSection {
+    padding: 0.75rem 0;
+  }
+  .phrase {
+    padding: 0 1.3rem;
+    font-size: 0.9rem;
+  }
+  .separator {
+    margin: 0 0.75rem;
+    font-size: 1.15rem;
+  }
+}
+
+/* Mobile pequeno */
+@media (max-width: 480px) {
+  .tickerSection {
+    padding: 0.7rem 0;
+  }
+  .phrase {
+    padding: 0 1.1rem;
+    font-size: 0.85rem;
+  }
+  .separator {
+    margin: 0 0.65rem;
+  }
+}

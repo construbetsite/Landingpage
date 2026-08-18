@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+<<<<<<< HEAD
+Sitemap:https://blindadosmolasblindex.com.br/sitemap.xml
+=======
+Sitemap: https://mslsaudeocupacional.com/sitemap.xml
+>>>>>>> a8a55d99a9d706255a0e22bc146868586279d6c4
