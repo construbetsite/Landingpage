@@ -84,7 +84,7 @@ Olá, vim pelo site e gostaria de mais informações sobre os produtos e serviç
     `;
 
     const encoded = encodeURIComponent(whatsappMessage.trim());
-    window.open(`https://wa.me/553135314706?text=${encoded}`, "_blank");
+    window.open(`https://wa.me/5531984630800?text=${encoded}`, "_blank");
   }
 
   return (

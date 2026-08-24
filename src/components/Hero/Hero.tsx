@@ -145,7 +145,7 @@ export default function Hero() {
                 className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 sm:px-8 py-3 sm:py-4 font-bold text-white hover:bg-red-700 transition-all duration-300 text-sm sm:text-base"
               >
                 <ShoppingBag size={18} className="sm:w-5 sm:h-5" />
-                VER CATÁLOGO
+                VER LOJA VIRTUAL
               </a>
 
               <a
