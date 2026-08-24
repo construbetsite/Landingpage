@@ -1,19 +1,4 @@
-// ============================================================
-// BLOG API - CLIENTE PÚBLICO DA LANDING PAGE
-// ============================================================
-//
-// Responsabilidade:
-// - Listar posts publicados
-// - Buscar post publicado por slug
-// - Listar categorias
-//
-// NÃO possui:
-// - criação
-// - edição
-// - exclusão
-// - upload
-// - autenticação administrativa
-// ============================================================
+
 
 import type {
   BlogCategoria,
@@ -25,7 +10,7 @@ import type {
 } from "../types/blog";
 
 const API_BASE = (
-  import.meta.env.VITE_API_URL || "http://localhost:10000"
+  import.meta.env.VITE_API_URL
 ).replace(/\/+$/, "");
 
 const DEFAULT_TIMEOUT_MS = 15_000;
