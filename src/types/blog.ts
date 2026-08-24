@@ -93,6 +93,7 @@ export interface BlogItemResponse {
   message?: string;
 }
 
+
 export interface BlogCategoriaListResponse {
   success: boolean;
   data: BlogCategoria[];
