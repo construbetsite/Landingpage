@@ -11,6 +11,8 @@ import {
   Truck,
   BadgeCheck,
 } from "lucide-react";
+import { ECOMMERCE_URL } from "../../config/constants";
+import { scrollToElement } from "../../hooks/useScrollToAnchor";
 
 export default function Hero() {
   const hero = useRef<HTMLDivElement>(null);
@@ -91,7 +93,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#072B63]/90 via-[#072B63]/70 to-black/30" />
 
         {/* ========== SELO 45 ANOS ========== */}
-        {/* 
+        {/*
           Ajuste fino de posição vertical:
           top-[xx%]  → altere o valor para subir/descer
         */}
@@ -115,7 +117,7 @@ export default function Hero() {
         <div className="relative z-10 flex items-center min-h-[85vh] lg:min-h-screen">
           <div className="container mx-auto px-5 sm:px-6 lg:px-12">
             {/* Badge */}
-      
+
 
             {/* Título */}
             <h1 className="titleHero mt-10 sm:mt-24 lg:mt-24 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-black leading-[1.05] text-white max-w-[18ch] sm:max-w-2xl lg:max-w-3xl">
@@ -139,7 +141,7 @@ export default function Hero() {
             {/* Botões */}
             <div className="buttonsHero flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8">
               <a
-                href="https://www.construbet.com.br/"
+                href={ECOMMERCE_URL || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 sm:px-8 py-3 sm:py-4 font-bold text-white hover:bg-red-700 transition-all duration-300 text-sm sm:text-base"
@@ -150,6 +152,11 @@ export default function Hero() {
 
               <a
                 href="#sobre"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToElement('#sobre');
+                  window.history.pushState(null, '', '#sobre');
+                }}
                 className="inline-flex items-center gap-2 rounded-xl border-2 border-white px-5 sm:px-8 py-3 sm:py-4 font-bold text-white hover:bg-white hover:text-[#072B63] transition-all duration-300 text-sm sm:text-base"
               >
                 <ArrowRight size={18} className="sm:w-5 sm:h-5" />

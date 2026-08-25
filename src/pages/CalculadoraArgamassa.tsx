@@ -10,6 +10,7 @@ import { useCalculatorValidation } from "../hooks/useCalculatorValidation";
 import { calculateMortar } from "../utils/calculateMortar";
 import { parseNumberInput, isPositiveNumber } from "../utils/numberHelpers";
 import SEO from "../components/SEO/SEO";
+import { ECOMMERCE_URL } from "../config/constants";
 
 export default function CalculadoraArgamassa() {
   const navigate = useNavigate();
@@ -157,7 +158,7 @@ setResult(
                   actions={
                     <>
                       <PrimaryButton href={budgetLink}>Solicitar orçamento</PrimaryButton>
-                      <a href="https://www.construbet.com.br" className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-sky-600 hover:text-sky-600">
+                      <a href={ECOMMERCE_URL || "#"} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-sky-600 hover:text-sky-600">
                         Ver argamassas
                       </a>
                     </>

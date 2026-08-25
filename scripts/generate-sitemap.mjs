@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SITE_URL = process.env.VITE_SITE_URL || 'https://www.construbet.com.br';
+const SITE_URL = (process.env.VITE_SITE_URL || 'https://site.construbet.com.br').replace(/\/+$/, '');
 const API_BASE = process.env.VITE_API_BASE || 'http://localhost:10000/api';
 const BLOG_API_URL = process.env.VITE_API_URL || 'http://localhost:10000';
 

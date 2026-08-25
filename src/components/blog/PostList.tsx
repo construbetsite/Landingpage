@@ -28,6 +28,7 @@ import {
   AlertCircle,
   Tag as TagIcon,
 } from "lucide-react";
+import { ECOMMERCE_URL } from "../../config/constants";
 
 import { useBlogPost } from "../../hooks/useBlogPost";
 import { useBlogPosts } from "../../hooks/useBlogPosts";
@@ -412,7 +413,7 @@ export default function BlogPostDetail() {
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="https://construbet.com.br"
+                href={ECOMMERCE_URL || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl transition"

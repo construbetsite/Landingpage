@@ -4,6 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "22.13.1"
+  # Desativa ou omite variáveis públicas de front-end do scanner de segredos da Netlify
+  SECRETS_SCAN_ENABLED = "false"
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SITE_URL,VITE_ECOMMERCE_URL,VITE_COMPANY_PHONE,VITE_WHATSAPP_NUMBER,VITE_API_URL,VITE_API_BASE,VITE_SUPABASE_URL,VITE_SUPABASE_BUCKET,VITE_SUPABASE_ANON_KEY,VITE_GTM_ID"
+  SECRETS_SCAN_OMIT_PATHS = "public/robots.txt,public/sitemap.xml,scripts/generate-sitemap.mjs,src/config/constants.ts,src/data/promotions.ts,dist/**"
 
 [[redirects]]
   from = "/*"

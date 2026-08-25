@@ -19,6 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
 import { Search, ArrowRight, Clock3, BookOpen, X, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import SEO from "../components/SEO/SEO";
+import { ECOMMERCE_URL } from "../config/constants";
 
 import { useBlogPosts } from "../hooks/useBlogPosts";
 import { useBlogCategories } from "../hooks/useBlogCategories";
@@ -441,7 +442,7 @@ export default function BlogPage() {
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <a
-                href="https://construbet.com.br"
+                href={ECOMMERCE_URL || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3.5 rounded-xl transition-all"

@@ -4,7 +4,8 @@
 
 export const COMPANY_PHONE = import.meta.env.VITE_COMPANY_PHONE || '553184630800';
 export const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || COMPANY_PHONE;
-export const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://www.construbet.com.br';
+export const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://site.construbet.com.br';
+export const ECOMMERCE_URL = import.meta.env.VITE_ECOMMERCE_URL || 'https://www.construbet.com.br';
 
 export const COMPANY_INFO = {
   name: 'Construbet',
@@ -29,6 +30,7 @@ export const COMPANY_INFO = {
     longitude: -44.1980,
   },
   siteUrl: SITE_URL,
+  ecommerceUrl: ECOMMERCE_URL,
 } as const;
 
 export const SOCIAL_LINKS = {

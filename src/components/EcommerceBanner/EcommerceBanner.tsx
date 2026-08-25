@@ -1,6 +1,7 @@
 "use client";
 
 import { ShoppingCart, User, Mail, Phone, Lock } from "lucide-react";
+import { ECOMMERCE_URL } from "../../config/constants";
 
 export default function EcommerceBanner() {
   return (
@@ -9,7 +10,7 @@ export default function EcommerceBanner() {
       <div className="bg-[#072B63] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-6">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-5 lg:gap-8">
-            
+
             {/* Texto da esquerda */}
             <div className="flex items-start sm:items-center gap-4">
               <div className="flex-shrink-0 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center">
@@ -30,7 +31,7 @@ export default function EcommerceBanner() {
 
             {/* Botão */}
             <a
-              href="https://www.construbet.com.br/"
+              href={ECOMMERCE_URL || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="
@@ -56,7 +57,7 @@ export default function EcommerceBanner() {
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
           <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-            
+
             {/* Texto da esquerda */}
             <div className="lg:w-5/12">
               <h3 className="text-xl sm:text-2xl font-black text-[#072B63] leading-tight mb-3">
@@ -72,7 +73,7 @@ export default function EcommerceBanner() {
             {/* Formulário */}
             <div className="w-full lg:w-7/12">
               <form className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                
+
                 {/* Nome */}
                 <div className="relative">
                   <input

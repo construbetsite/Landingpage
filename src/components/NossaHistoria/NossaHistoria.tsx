@@ -1,17 +1,18 @@
 // NossaHistoria.tsx - Versão Profissional Otimizada
 import { memo, useEffect, useRef,  useMemo } from "react";
 import { motion, useInView } from "framer-motion";
-import { 
-  Building2, 
-  Flag, 
-  MonitorSmartphone, 
-  TrendingUp, 
+import {
+  Building2,
+  Flag,
+  MonitorSmartphone,
+  TrendingUp,
   Users,
   Award,
   Clock,
   MapPin,
   Star
 } from "lucide-react";
+import { ECOMMERCE_URL } from "../../config/constants";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -108,7 +109,7 @@ const TimelineCard = memo(({ item, index }: { item: TimelineItem; index: number 
       {/* Linha de conexão com o ponto central */}
       <div   className="hidden md:block absolute top-8 w-8 h-px bg-slate-200">
         <div className={`
-          w-2 h-2 rounded-full bg-[#071B46] 
+          w-2 h-2 rounded-full bg-[#071B46]
           ${isEven ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2"}
           absolute top-1/2 -translate-y-1/2
         `} />
@@ -117,8 +118,8 @@ const TimelineCard = memo(({ item, index }: { item: TimelineItem; index: number 
       <motion.article
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ 
-          duration: 0.5, 
+        transition={{
+          duration: 0.5,
           delay: index * 0.08,
           ease: [0.22, 1, 0.36, 1]
         }}
@@ -126,7 +127,7 @@ const TimelineCard = memo(({ item, index }: { item: TimelineItem; index: number 
       >
         {/* Gradiente de fundo no hover */}
         <div className={`
-          absolute inset-0 rounded-2xl bg-gradient-to-br ${item.color || 'from-blue-500/5 to-blue-400/5'} 
+          absolute inset-0 rounded-2xl bg-gradient-to-br ${item.color || 'from-blue-500/5 to-blue-400/5'}
           opacity-0 group-hover:opacity-100 transition-opacity duration-300
         `} />
 
@@ -135,7 +136,7 @@ const TimelineCard = memo(({ item, index }: { item: TimelineItem; index: number 
             <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#071B46]/5 text-[#071B46] group-hover:bg-[#071B46] group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
               <Icon size={20} className="transition-transform duration-300 group-hover:rotate-3" />
             </div>
-            
+
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#071B46]/60 group-hover:text-[#071B46] transition-colors">
                 {item.year}
@@ -145,7 +146,7 @@ const TimelineCard = memo(({ item, index }: { item: TimelineItem; index: number 
               </h3>
             </div>
           </div>
-          
+
           <p className="mt-3 text-sm leading-relaxed text-slate-600 group-hover:text-slate-700 transition-colors">
             {item.text}
           </p>
@@ -168,8 +169,8 @@ const StatCard = memo(({ stat, index }: { stat: HistoryStat; index: number }) =>
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.95 }}
-        transition={{ 
-          duration: 0.4, 
+        transition={{
+          duration: 0.4,
           delay: index * 0.06,
           ease: [0.22, 1, 0.36, 1]
         }}
@@ -229,15 +230,15 @@ function NossaHistoria() {
       defaults: { ease: "power2.out" }
     });
 
-    tl.to(line, { 
-      scaleY: 1, 
-      duration: 1.5, 
-      ease: "power3.inOut" 
+    tl.to(line, {
+      scaleY: 1,
+      duration: 1.5,
+      ease: "power3.inOut"
     })
-    .to(cards, { 
-      opacity: 1, 
-      y: 0, 
-      duration: 0.8, 
+    .to(cards, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
       stagger: 0.12,
       ease: "power2.out"
     }, "-=1");
@@ -250,7 +251,7 @@ function NossaHistoria() {
 
 
   return (
-    <section 
+    <section
       id="empresa"
       ref={sectionRef}
       className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50/50 px-4 py-20 sm:px-6 lg:px-8"
@@ -317,7 +318,7 @@ function NossaHistoria() {
           {/* Timeline */}
           <div className="relative">
             {/* Linha vertical central */}
-            <div 
+            <div
               ref={lineRef}
               className="absolute left-4 top-0 h-full w-0.5 bg-[#071B46]/20 md:left-1/2 md:-translate-x-1/2"
               style={{ transformOrigin: "top center" }}
@@ -325,14 +326,14 @@ function NossaHistoria() {
 
             <div ref={timelineRef} className="relative flex flex-col gap-8 md:gap-10">
               {TIMELINE_ITEMS.map((item, index) => (
-                <div 
-                  key={item.year} 
-                  data-timeline-card 
+                <div
+                  key={item.year}
+                  data-timeline-card
                   className="relative flex flex-col md:flex-row md:justify-between"
                 >
                   {/* Ponto central - Desktop */}
                   <div className="hidden md:block absolute left-1/2 top-8 h-4 w-4 -translate-x-1/2 rounded-full border-2 border-white bg-[#071B46] shadow-md z-10" />
-                  
+
                   <TimelineCard item={item} index={index} />
                 </div>
               ))}
@@ -351,11 +352,11 @@ function NossaHistoria() {
               <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#071B46]/60">
                 Nossa Marca
               </span>
-              
+
               <h3 className="mt-3 text-2xl font-semibold leading-tight text-slate-900">
                 Mais do que vender materiais de construção, construímos relações de confiança há mais de quatro décadas.
               </h3>
-              
+
               <p className="mt-4 text-base leading-relaxed text-slate-600">
                 A Construbet nasceu para servir clientes com honestidade, disponibilidade e uma visão longa de mercado. Hoje, essa essência segue viva em cada atendimento, produto e projeto.
               </p>
@@ -387,15 +388,17 @@ function NossaHistoria() {
                 "Mais do que vender materiais de construção, construímos relações de confiança há mais de quatro décadas."
               </p>
             </div>
-            
+
             <div className="flex flex-wrap gap-3 flex-shrink-0">
-              <a 
-                href="https://www.construbet.com.br" 
+              <a
+                href={ECOMMERCE_URL || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-[#071B46] transition-all duration-200 hover:bg-slate-100 hover:scale-105 hover:shadow-lg"
               >
                 Conheça nossa loja
               </a>
-            
+
             </div>
           </div>
         </motion.div>
