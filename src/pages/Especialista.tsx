@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import CalculatorCard from "../components/CalculatorCard";
 import PrimaryButton from "../components/PrimaryButton";
+import { generateWhatsAppLink } from "../config/constants";
+import SEO from "../components/SEO/SEO";
 
 const specialists = [
   { name: "Renata Almeida", role: "Especialista em pisos e revestimentos", area: "Coberturas e acabamento" },
@@ -24,12 +25,12 @@ export default function Especialista() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-900 sm:px-6 lg:px-8">
+      <SEO
+        title="Falar com Especialista | Construbet"
+        description="Fale com um especialista técnico da Construbet sobre pisos, tintas, argamassas e rejuntes."
+        canonical="/especialista"
+      />
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
-        <Helmet>
-          <title>Especialista | Construbet</title>
-          <meta name="description" content="Fale com um especialista da Construbet sobre pisos, tintas, argamassas e rejuntes." />
-          <link rel="canonical" href="https://www.construbet.com.br/especialista" />
-        </Helmet>
         <section className="rounded-4xl border border-slate-200 bg-white p-8 shadow-[0_20px_80px_rgba(15,23,42,0.08)] sm:p-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -67,7 +68,7 @@ export default function Especialista() {
                 </p>
               </div>
               <div className="mt-6 space-y-3">
-                <PrimaryButton href="https://wa.me/5531999999999">Falar no WhatsApp</PrimaryButton>
+                <PrimaryButton href={generateWhatsAppLink("Olá! Gostaria de falar com um especialista da Construbet.")}>Falar no WhatsApp</PrimaryButton>
                 <Link to="/orcamento" className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-sky-600 hover:text-sky-600">
                   Solicitar orçamento
                 </Link>

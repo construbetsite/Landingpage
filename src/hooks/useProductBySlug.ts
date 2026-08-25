@@ -1,34 +1,31 @@
 // src/hooks/useProductBySlug.ts
-import { useEffect, useState } from 'react';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { getProductBySlug } from '../services/api/products';
 import type { Product } from '../types/types';
 
 export function useProductBySlug(slug: string) {
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const cleanSlug = typeof slug === 'string' ? slug.trim() : '';
 
-  useEffect(() => {
-    if (!slug) {
-      setLoading(false);
-      return;
-    }
+  const query = useQuery<Product | null>({
+    queryKey: ['product', cleanSlug],
+    queryFn: async () => {
+      if (!cleanSlug) return null;
+      return await getProductBySlug(cleanSlug);
+    },
+    enabled: !!cleanSlug && cleanSlug.length > 0,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    retry: false,
+    placeholderData: keepPreviousData,
+  });
 
-    const fetch = async () => {
-      try {
-        setLoading(true);
-        const data = await getProductBySlug(slug);
-        setProduct(data || null);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Produto não encontrado');
-        setProduct(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
-  }, [slug]);
-
-  return { product, loading, error };
+  return {
+    product: query.data ?? null,
+    loading: query.isLoading,
+    error: query.error ? (query.error as Error).message : null,
+    refetch: query.refetch,
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

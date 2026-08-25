@@ -1,28 +1,29 @@
 import { Facebook, Instagram, MessageCircle, Music4, Youtube } from "lucide-react";
 import type { SocialLink } from "../types/socialLink";
+import { SOCIAL_LINKS } from "../config/constants";
 
 export const socialLinks: SocialLink[] = [
   {
     name: "Instagram",
-    url: "https://www.instagram.com/construbet",
+    url: SOCIAL_LINKS.instagram,
     icon: Instagram,
     description: "Conteúdo, novidades e inspirações.",
   },
   {
     name: "Facebook",
-    url: "https://www.facebook.com/construbet",
+    url: SOCIAL_LINKS.facebook,
     icon: Facebook,
     description: "Atualizações e produtos em destaque.",
   },
   {
     name: "WhatsApp",
-    url: "https://wa.me/5531999999999",
+    url: SOCIAL_LINKS.whatsapp,
     icon: MessageCircle,
     description: "Atendimento rápido e direto.",
   },
   {
     name: "YouTube",
-    url: "https://www.youtube.com",
+    url: SOCIAL_LINKS.youtube,
     icon: Youtube,
     description: "Tendências e dicas de construção.",
   },

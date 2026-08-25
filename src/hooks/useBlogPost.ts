@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-
-import { getPostBySlug } from "../services/blogApi";
-
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { BlogApiError, blogApi } from "../services/blogApi";
 import type { BlogPost } from "../types/blog";
 
 // ============================================================
@@ -14,185 +12,55 @@ export interface UseBlogPostResult {
   error: string | null;
   notFound: boolean;
   refetch: () => void;
+  data: BlogPost | null | undefined;
+  isLoading: boolean;
+  isError: boolean;
 }
 
 // ============================================================
-// HOOK - POST INDIVIDUAL
-// ============================================================
-//
-// Responsabilidade:
-// - Buscar um único post pelo slug
-// - Controlar carregamento
-// - Controlar erro
-// - Identificar post não encontrado
-// - Cancelar requisições anteriores
-//
-// Não possui:
-// - criação
-// - edição
-// - exclusão
-// - autenticação administrativa
+// HOOK - POST INDIVIDUAL COM REACT QUERY
 // ============================================================
 
-export function useBlogPost(
-  slug?: string
-): UseBlogPostResult {
-  const [post, setPost] = useState<BlogPost | null>(null);
+export function useBlogPost(slug?: string): UseBlogPostResult {
+  const cleanSlug = typeof slug === "string" ? slug.trim() : "";
+  const isEnabled = cleanSlug.length > 0;
 
-  const [loading, setLoading] = useState(false);
+  const query = useQuery<BlogPost | null, Error>({
+    queryKey: ["blogPost", cleanSlug],
+    queryFn: async ({ signal }) => {
+      if (!cleanSlug) return null;
+      return await blogApi.getPostBySlug(cleanSlug, signal);
+    },
+    enabled: isEnabled,
+    staleTime: 1000 * 60 * 5, // 5 minutos de dados frescos
+    gcTime: 1000 * 60 * 30, // 30 minutos em cache
+    retry: false, // Evita retry em cancelamento
+    placeholderData: keepPreviousData, // Mantém dados anteriores durante transições
+  });
 
-  const [error, setError] = useState<string | null>(null);
+  const isAbortError =
+    query.error?.message === "Requisição cancelada" ||
+    (query.error instanceof BlogApiError && query.error.message.includes("cancelada"));
 
-  const [notFound, setNotFound] = useState(false);
+  const isNotFound =
+    (query.error instanceof BlogApiError && query.error.status === 404) ||
+    (!query.isLoading && isEnabled && !query.isFetching && query.data === null);
 
-  // Guarda o controller da requisição atual.
-  // Isso evita que uma requisição antiga sobrescreva
-  // o resultado de uma navegação mais recente.
-  const abortRef = useRef<AbortController | null>(null);
-
-  // ==========================================================
-  // BUSCAR POST
-  // ==========================================================
-
-  const fetchPost = useCallback(async () => {
-    // --------------------------------------------------------
-    // SLUG AUSENTE
-    // --------------------------------------------------------
-
-    if (!slug) {
-      abortRef.current?.abort();
-
-      setPost(null);
-      setLoading(false);
-      setError(null);
-      setNotFound(false);
-
-      return;
-    }
-
-    // --------------------------------------------------------
-    // CANCELAR REQUISIÇÃO ANTERIOR
-    // --------------------------------------------------------
-
-    abortRef.current?.abort();
-
-    const controller = new AbortController();
-
-    abortRef.current = controller;
-
-    // --------------------------------------------------------
-    // ESTADO INICIAL DA REQUISIÇÃO
-    // --------------------------------------------------------
-
-    setLoading(true);
-    setError(null);
-    setNotFound(false);
-
-    try {
-      // ------------------------------------------------------
-      // CONSULTA À API PÚBLICA
-      // ------------------------------------------------------
-
-      const result = await getPostBySlug(slug, {
-        signal: controller.signal,
-      });
-
-      // ------------------------------------------------------
-      // A REQUISIÇÃO FOI CANCELADA
-      // ------------------------------------------------------
-
-      if (controller.signal.aborted) {
-        return;
-      }
-
-      // ------------------------------------------------------
-      // POST NÃO ENCONTRADO
-      // ------------------------------------------------------
-
-      if (!result) {
-        setPost(null);
-        setNotFound(true);
-
-        return;
-      }
-
-      // ------------------------------------------------------
-      // POST ENCONTRADO
-      // ------------------------------------------------------
-
-      setPost(result);
-      setNotFound(false);
-    } catch (err: unknown) {
-      // ------------------------------------------------------
-      // IGNORA ERROS DE REQUISIÇÕES CANCELADAS
-      // ------------------------------------------------------
-
-      if (controller.signal.aborted) {
-        return;
-      }
-
-      // ------------------------------------------------------
-      // CONVERTER ERRO PARA STRING
-      // ------------------------------------------------------
-
-      const message =
-        err instanceof Error
-          ? err.message
-          : "Erro ao carregar o post.";
-
-      // ------------------------------------------------------
-      // POST NÃO ENCONTRADO
-      // ------------------------------------------------------
-
-      if (
-        /404|não encontrado|not found/i.test(message)
-      ) {
-        setPost(null);
-        setNotFound(true);
-        setError(null);
-
-        return;
-      }
-
-      // ------------------------------------------------------
-      // OUTRO ERRO
-      // ------------------------------------------------------
-
-      setPost(null);
-      setNotFound(false);
-      setError(message);
-    } finally {
-      // ------------------------------------------------------
-      // FINALIZAR LOADING
-      // ------------------------------------------------------
-
-      if (!controller.signal.aborted) {
-        setLoading(false);
-      }
-    }
-  }, [slug]);
-
-  // ==========================================================
-  // EXECUTAR QUANDO O SLUG MUDAR
-  // ==========================================================
-
-  useEffect(() => {
-    fetchPost();
-
-    return () => {
-      abortRef.current?.abort();
-    };
-  }, [fetchPost]);
-
-  // ==========================================================
-  // RETORNO
-  // ==========================================================
+  const displayError = isAbortError || isNotFound ? null : query.error ? query.error.message : null;
 
   return {
-    post,
-    loading,
-    error,
-    notFound,
-    refetch: fetchPost,
+    post: query.data ?? null,
+    loading: query.isLoading,
+    error: displayError,
+    notFound: isNotFound,
+    refetch: () => {
+      query.refetch();
+    },
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError && !isAbortError && !isNotFound,
   };
 }
+
+export default useBlogPost;
+

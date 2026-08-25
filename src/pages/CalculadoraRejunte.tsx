@@ -1,7 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { BadgeAlert, Grid3x3, Sparkles } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import CalculatorCard from "../components/CalculatorCard";
 import InputField from "../components/InputField";
@@ -10,6 +9,7 @@ import ResultCard from "../components/ResultCard";
 import { useCalculatorValidation } from "../hooks/useCalculatorValidation";
 import { calculateGrout } from "../utils/calculateGrout";
 import { parseNumberInput, isPositiveNumber } from "../utils/numberHelpers";
+import SEO from "../components/SEO/SEO";
 
 export default function CalculadoraRejunte() {
   const navigate = useNavigate();
@@ -90,11 +90,11 @@ export default function CalculadoraRejunte() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-900 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>Calculadora de Rejunte | Construbet</title>
-        <meta name="description" content="Calcule a quantidade de rejunte em kg com base na área, largura de junta e dimensão da peça." />
-        <link rel="canonical" href="https://www.construbet.com.br/calculadora/rejunte" />
-      </Helmet>
+      <SEO
+        title="Calculadora de Rejunte | Construbet"
+        description="Calcule a quantidade exata de rejunte em kg com base na área, largura de junta e dimensão das peças."
+        canonical="/calculadora/rejunte"
+      />
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
         <section className="rounded-4xl border border-slate-200 bg-white p-8 shadow-[0_20px_80px_rgba(15,23,42,0.08)] sm:p-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -174,7 +174,7 @@ export default function CalculadoraRejunte() {
               )}
 </div>
         </section>
-        
+
       </div>
     </div>
   );

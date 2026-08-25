@@ -12,25 +12,25 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
-  
+
   const token = await getAccessToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  
+
   return headers;
 }
 
 export const api = {
-  get: async <T = any>(endpoint: string): Promise<T> => {
+  get: async <T = unknown>(endpoint: string): Promise<T> => {
     const headers = await getAuthHeaders();
-    
+
     console.log(`📡 [GET] ${API_BASE}/api${endpoint}`);
-    
+
     const response = await fetch(`${API_BASE}/api${endpoint}`, {
       headers,
     });
-    
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: `Erro ${response.status}` }));
       throw new Error(error.message || error.error || `Erro ${response.status}`);
@@ -38,18 +38,18 @@ export const api = {
     return response.json();
   },
 
-  post: async <T = any>(endpoint: string, data?: any): Promise<T> => {
+  post: async <T = unknown>(endpoint: string, data?: unknown): Promise<T> => {
     const headers = await getAuthHeaders();
-    
+
     console.log(`📤 [POST] ${API_BASE}/api${endpoint}`);
     console.log('📤 Dados enviados:', JSON.stringify(data, null, 2));
-    
+
     const response = await fetch(`${API_BASE}/api${endpoint}`, {
       method: 'POST',
       headers,
       body: data ? JSON.stringify(data) : undefined,
     });
-    
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: `Erro ${response.status}` }));
       console.error('❌ Erro na resposta:', error);
@@ -58,18 +58,18 @@ export const api = {
     return response.json();
   },
 
-  put: async <T = any>(endpoint: string, data: any): Promise<T> => {
+  put: async <T = unknown>(endpoint: string, data: unknown): Promise<T> => {
     const headers = await getAuthHeaders();
-    
+
     console.log(`📤 [PUT] ${API_BASE}/api${endpoint}`);
     console.log('📤 Dados enviados:', JSON.stringify(data, null, 2));
-    
+
     const response = await fetch(`${API_BASE}/api${endpoint}`, {
       method: 'PUT',
       headers,
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: `Erro ${response.status}` }));
       console.error('❌ Erro na resposta:', error);
@@ -80,14 +80,14 @@ export const api = {
 
   delete: async (endpoint: string): Promise<void> => {
     const headers = await getAuthHeaders();
-    
+
     console.log(`🗑️ [DELETE] ${API_BASE}/api${endpoint}`);
-    
+
     const response = await fetch(`${API_BASE}/api${endpoint}`, {
       method: 'DELETE',
       headers,
     });
-    
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: `Erro ${response.status}` }));
       throw new Error(error.message || error.error || `Erro ${response.status}`);

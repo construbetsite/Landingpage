@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, BadgePercent, Sparkles, ChevronLeft, ChevronRight, ExternalLink, ShoppingBag } from "lucide-react";
+import { ArrowRight, BadgePercent, Sparkles, ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useProducts } from "../../hooks/useProducts";
@@ -144,7 +144,7 @@ export default function PromocoesSemana() {
           <div className="relative">
             <div
               ref={scrollContainerRef}
-              className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory 
+              className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory
                        md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:pb-0 md:snap-none
                        lg:grid-cols-3 xl:grid-cols-4 xl:gap-6
                        scrollbar-hide"
@@ -156,21 +156,12 @@ export default function PromocoesSemana() {
             >
               {displayProducts.map((product, index) => {
                 const isEcommerce = product.commercialType === 'ECOMMERCE';
-                // Garantir que actionUrl seja sempre uma string, nunca null
-                let actionUrl: string;
-                if (isEcommerce) {
-                  actionUrl = product.redirectUrl || '#';
-                } else {
-                  actionUrl = product.slug ? `/produto/${product.slug}` : '#';
-                }
+                const productUrl = `/produto/${product.slug}`;
 
                 const priceFormatted = product.price?.toLocaleString('pt-BR', {
                   style: 'currency',
                   currency: 'BRL',
                 });
-
-                // Se for ECOMMERCE e não tiver redirectUrl, desabilita
-                const hasValidAction = isEcommerce ? !!product.redirectUrl : !!product.slug;
 
                 return (
                   <motion.div
@@ -180,7 +171,10 @@ export default function PromocoesSemana() {
                     transition={{ delay: index * 0.06 }}
                     className="card-wrapper min-w-[85%] sm:min-w-[45%] md:min-w-0 snap-center h-full"
                   >
-                    <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-300 h-full flex flex-col">
+                    <Link
+                      to={productUrl}
+                      className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-300 h-full flex flex-col block"
+                    >
                       {/* Badge de destaque */}
                       {product.featured && (
                         <div className="absolute top-3 left-3 z-10 bg-yellow-400 text-black text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg">
@@ -214,7 +208,7 @@ export default function PromocoesSemana() {
                           )}
                           {isEcommerce && (
                             <span className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                              <ExternalLink size={10} /> Online
+                              Online
                             </span>
                           )}
                         </div>
@@ -241,32 +235,13 @@ export default function PromocoesSemana() {
                           )}
 
                           {/* Botão de ação */}
-                          {hasValidAction ? (
-                            isEcommerce ? (
-                              <a
-                                href={actionUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105"
-                              >
-                                Comprar
-                                <ExternalLink size={14} />
-                              </a>
-                            ) : (
-                              <Link
-                                to={actionUrl}
-                                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105"
-                              >
-                                Ver mais
-                                <ShoppingBag size={14} />
-                              </Link>
-                            )
-                          ) : (
-                            <span className="text-xs text-white/40">Indisponível</span>
-                          )}
+                          <span className="inline-flex items-center gap-1.5 bg-blue-600 group-hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all duration-300 group-hover:scale-105">
+                            Ver detalhes
+                            <ShoppingBag size={14} />
+                          </span>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </motion.div>
                 );
               })}

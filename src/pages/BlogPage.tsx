@@ -17,8 +17,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { Search, ArrowRight, Clock3, BookOpen, X, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
+import SEO from "../components/SEO/SEO";
 
 import { useBlogPosts } from "../hooks/useBlogPosts";
 import { useBlogCategories } from "../hooks/useBlogCategories";
@@ -237,14 +237,11 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <Helmet>
-        <title>Blog Construbet | Dicas e conteúdos para sua obra</title>
-        <meta
-          name="description"
-          content="Artigos, dicas práticas e respostas para as dúvidas mais comuns sobre materiais de construção, acabamento e execução de obras."
-        />
-        <link rel="canonical" href="https://www.construbet.com.br/blog" />
-      </Helmet>
+      <SEO
+        title={activeCategory ? `Blog - ${activeCategory} | Construbet` : "Blog Construbet | Dicas e conteúdos para sua obra"}
+        description="Artigos, dicas práticas e respostas para as dúvidas mais comuns sobre materiais de construção, acabamento e execução de obras."
+        canonical={activeCategory ? `/blog?categoria=${encodeURIComponent(activeCategory)}` : "/blog"}
+      />
 
       {/* Hero */}
       <section className="relative overflow-hidden px-4 sm:px-6 pt-20 md:pt-28 pb-14">

@@ -14,9 +14,13 @@ import Footer from "./components/Footer/Footer";
 import ScrollTop from "./components/ScrollTop/ScrollTop";
 import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange/ScrollToTopOnRouteChange";
 import ContactForm from "./components/ContactForm/ContactForm";
-import { HelmetProvider, Helmet } from "react-helmet-async";
+import { HelmetProvider } from "react-helmet-async";
+import SEO from "./components/SEO/SEO";
+import { COMPANY_INFO, SOCIAL_LINKS, SITE_URL } from "./config/constants";
+import { useScrollToAnchor } from "./hooks/useScrollToAnchor";
+import GTMScript from "./components/GTM/GTMScript";
+import CookieBanner from "./components/CookieBanner/CookieBanner";
 
-import PoliticaEPrivacidade from "./pages/PoliticasEPrivacidade";
 import GoogleMapsSection from "./components/GoogleMapsSection/GoogleMapsSection";
 import FeaturesBar from "./components/FeatureBar/FeatureBar";
 import FeaturedProducts from "./components/FeaturedProducts/FeaturedProducts";
@@ -31,6 +35,7 @@ import EcommerceBanner from "./components/EcommerceBanner/EcommerceBanner";
 // =====================================================
 // CODE-SPLITTING: páginas carregadas sob demanda
 // =====================================================
+const PoliticaEPrivacidade = lazy(() => import("./pages/PoliticasEPrivacidade"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const BlogPostDetail = lazy(() => import("./pages/blog/BlogPostDetail"));
 
@@ -61,11 +66,17 @@ function AppContent() {
   const location = useLocation();
   const pathname = location.pathname.toLowerCase();
 
+  // Ativa scroll suave para âncoras na mudança de rota e hash
+  useScrollToAnchor();
+
   const isBlogPage = pathname.startsWith("/blog");
-  const isPoliticaPage = pathname === "/politicas";
+  const isPoliticaPage = pathname === "/politicas" || pathname === "/politica-de-privacidade" || pathname === "/termos";
 
   return (
     <div className="min-h-screen">
+      <GTMScript />
+      <CookieBanner />
+
       {/* HEADER CONTEXTUAL */}
       {isBlogPage ? (
         <HeaderBlog />
@@ -84,64 +95,43 @@ function AppContent() {
           path="/"
           element={
             <>
-              <Helmet>
-                <title>Construbet | Materiais para Construção em Betim - MG</title>
-                <meta
-                  name="description"
-                  content="Há mais de 45 anos a Construbet oferece materiais para construção, acabamento, pisos, ferramentas e muito mais em Betim e região. Qualidade, tradição e entrega rápida."
-                />
-                <meta
-                  name="keywords"
-                  content="materiais de construção betim, loja de construção betim, cimento betim, porcelanato betim, ferramentas betim, acabamento betim, construbet, materiais para obra betim, loja de materiais de construção mg"
-                />
-                <link rel="canonical" href="https://www.construbet.com.br" />
-                <meta name="robots" content="index, follow" />
-                <meta name="author" content="Construbet" />
-                <meta name="geo.region" content="BR-MG" />
-                <meta name="geo.placename" content="Betim" />
-                <meta name="geo.position" content="-19.9677;-44.1980" />
-                <meta name="ICBM" content="-19.9677, -44.1980" />
-                <meta property="og:type" content="website" />
-                <meta property="og:title" content="Construbet | Materiais para Construção em Betim - MG" />
-                <meta
-                  property="og:description"
-                  content="Há mais de 45 anos oferecendo materiais para construção, acabamento e ferramentas com qualidade e tradição em Betim e região."
-                />
-                <meta property="og:image" content="https://www.construbet.com.br/og-image.jpg" />
-                <meta property="og:url" content="https://www.construbet.com.br" />
-                <meta property="og:site_name" content="Construbet" />
-                <meta property="og:locale" content="pt_BR" />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="Construbet | Materiais para Construção em Betim" />
-                <meta
-                  name="twitter:description"
-                  content="Há mais de 45 anos construindo confiança em Betim. Materiais de qualidade com entrega rápida."
-                />
-                <script
-                  type="application/ld+json"
-                  dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                      "@context": "https://schema.org",
-                      "@type": "HomeGoodsStore",
-                      name: "Construbet",
-                      image: "https://www.construbet.com.br/logo.webp",
-                      description:
-                        "Loja de materiais para construção em Betim - MG. Há mais de 45 anos oferecendo qualidade e tradição.",
-                      address: {
-                        "@type": "PostalAddress",
-                        addressLocality: "Betim",
-                        addressRegion: "MG",
-                        addressCountry: "BR",
-                      },
-                      url: "https://www.construbet.com.br",
-                      sameAs: [
-                        "https://www.instagram.com/construbet",
-                        "https://www.facebook.com/construbet",
-                      ],
-                    }),
-                  }}
-                />
-              </Helmet>
+              <SEO
+                title="Construbet | Materiais para Construção em Betim - MG"
+                description="Há mais de 45 anos a Construbet oferece materiais para construção, acabamento, pisos, ferramentas e muito mais em Betim e região. Qualidade, tradição e entrega rápida."
+                keywords={[
+                  "materiais de construção betim",
+                  "loja de construção betim",
+                  "cimento betim",
+                  "porcelanato betim",
+                  "ferramentas betim",
+                  "acabamento betim",
+                  "construbet",
+                  "materiais para obra betim",
+                  "loja de materiais de construção mg",
+                ]}
+                canonical="/"
+                jsonLd={{
+                  "@context": "https://schema.org",
+                  "@type": "HomeGoodsStore",
+                  name: COMPANY_INFO.name,
+                  image: `${SITE_URL}/logo.webp`,
+                  description:
+                    "Loja de materiais para construção em Betim - MG. Há mais de 45 anos oferecendo qualidade e tradição.",
+                  address: {
+                    "@type": "PostalAddress",
+                    addressLocality: COMPANY_INFO.address.city,
+                    addressRegion: COMPANY_INFO.address.state,
+                    addressCountry: COMPANY_INFO.address.country,
+                  },
+                  telephone: COMPANY_INFO.phoneFormatted,
+                  url: SITE_URL,
+                  sameAs: [
+                    SOCIAL_LINKS.instagram,
+                    SOCIAL_LINKS.facebook,
+                    SOCIAL_LINKS.youtube,
+                  ],
+                }}
+              />
 
               <main className="pt-16 min-h-screen flex flex-col">
                 <Hero />
@@ -179,7 +169,30 @@ function AppContent() {
         />
 
         {/* ===================== POLÍTICAS ===================== */}
-        <Route path="/politicas" element={<PoliticaEPrivacidade />} />
+        <Route
+          path="/politicas"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PoliticaEPrivacidade />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/politica-de-privacidade"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PoliticaEPrivacidade />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/termos"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <PoliticaEPrivacidade />
+            </Suspense>
+          }
+        />
 
         {/* ===================== BLOG ===================== */}
         <Route

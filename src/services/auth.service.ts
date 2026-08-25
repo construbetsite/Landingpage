@@ -37,12 +37,12 @@ export const authService = {
       email,
       password,
     });
-    
+
     if (error) throw error;
     return data;
   },
 
-  async signUp(email: string, password: string, metadata?: any) {
+  async signUp(email: string, password: string, metadata?: Record<string, unknown>) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -50,7 +50,7 @@ export const authService = {
         data: metadata,
       },
     });
-    
+
     if (error) throw error;
     return data;
   },

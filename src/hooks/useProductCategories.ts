@@ -1,35 +1,31 @@
 // src/hooks/useProductCategories.ts
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getProductCategories } from '../services/api/products';
 import type { ProductCategory } from '../types/types';
 
-export function useProductCategories(filters?: {
+export interface ProductCategoryFilters {
   active?: boolean;
   parentId?: string | null;
-}) {
-  const [categories, setCategories] = useState<ProductCategory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+}
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        setLoading(true);
-        const data = await getProductCategories({
-          active: filters?.active ?? true,
-          ...filters,
-        });
-        setCategories(Array.isArray(data) ? data : []);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao carregar categorias');
-        setCategories([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
-  }, [filters?.active, filters?.parentId]);
+export function useProductCategories(filters?: ProductCategoryFilters) {
+  const query = useQuery<ProductCategory[]>({
+    queryKey: ['product-categories', filters],
+    queryFn: () =>
+      getProductCategories({
+        active: filters?.active ?? true,
+        ...filters,
+      }),
+    staleTime: 1000 * 60 * 5,
+  });
 
-  return { categories, loading, error };
+  return {
+    categories: query.data ?? [],
+    loading: query.isLoading,
+    error: query.error ? (query.error as Error).message : null,
+    refetch: query.refetch,
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

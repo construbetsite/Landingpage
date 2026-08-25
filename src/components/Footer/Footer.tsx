@@ -1,7 +1,25 @@
 
-import { MapPin, Phone, Mail, Instagram, Facebook } from "lucide-react";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { MapPin, Phone, Mail, Instagram, Facebook, ShieldCheck } from "lucide-react";
+import { COMPANY_INFO, SOCIAL_LINKS, generateWhatsAppLink } from "../../config/constants";
+import { scrollToElement } from "../../hooks/useScrollToAnchor";
+import { openCookieSettings } from "../../lib/consent";
 
 const Footer: React.FC = () => {
+  const location = useLocation();
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+    if (target.startsWith('#') || target.startsWith('/#')) {
+      const hash = target.includes('#') ? `#${target.split('#')[1]}` : target;
+      if (location.pathname === '/') {
+        e.preventDefault();
+        scrollToElement(hash);
+        window.history.pushState(null, '', hash);
+      }
+    }
+  };
+
   return (
     <footer className="bg-[#072B63] text-white pt-16 pb-0">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
@@ -21,7 +39,7 @@ const Footer: React.FC = () => {
           {/* Redes Sociais */}
           <div className="flex items-center gap-3 mt-6">
             <a
-              href="https://instagram.com/construbet"
+              href={SOCIAL_LINKS.instagram}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -31,7 +49,7 @@ const Footer: React.FC = () => {
             </a>
 
             <a
-              href="https://facebook.com/construbet"
+              href={SOCIAL_LINKS.facebook}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -68,29 +86,61 @@ const Footer: React.FC = () => {
           </h4>
           <ul className="space-y-3 text-sm text-blue-100">
             <li>
-              <a href="/" className="hover:text-red-400 transition-colors">
+              <Link
+                to="/"
+                onClick={() => {
+                  if (location.pathname === '/') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="hover:text-red-400 transition-colors"
+              >
                 Início
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#sobre" className="hover:text-red-400 transition-colors">
+              <Link
+                to="/#sobre"
+                onClick={(e) => handleNavClick(e, '#sobre')}
+                className="hover:text-red-400 transition-colors"
+              >
                 Sobre a Empresa
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#produtos" className="hover:text-red-400 transition-colors">
+              <Link
+                to="/#produtos"
+                onClick={(e) => handleNavClick(e, '#produtos')}
+                className="hover:text-red-400 transition-colors"
+              >
                 Produtos
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#ofertas" className="hover:text-red-400 transition-colors">
+              <Link
+                to="/#ofertas"
+                onClick={(e) => handleNavClick(e, '#ofertas')}
+                className="hover:text-red-400 transition-colors"
+              >
                 Ofertas
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#contato" className="hover:text-red-400 transition-colors">
+              <Link
+                to="/blog"
+                className="hover:text-red-400 transition-colors"
+              >
+                Blog
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/#contato"
+                onClick={(e) => handleNavClick(e, '#contato')}
+                className="hover:text-red-400 transition-colors"
+              >
                 Contato
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -105,18 +155,22 @@ const Footer: React.FC = () => {
           <ul className="space-y-4 text-sm text-blue-100">
             <li className="flex items-start gap-3">
               <Phone className="text-red-500 mt-0.5 shrink-0" size={18} />
-              <span>(31) 93532-2800</span>
+              <a href={COMPANY_INFO.phoneTel} className="hover:text-red-400 transition-colors">
+                {COMPANY_INFO.phoneFormatted}
+              </a>
             </li>
 
             <li className="flex items-start gap-3">
               <Mail className="text-red-500 mt-0.5 shrink-0" size={18} />
-              <span>contato@construbet.com.br</span>
+              <a href={`mailto:${COMPANY_INFO.email}`} className="hover:text-red-400 transition-colors">
+                {COMPANY_INFO.email}
+              </a>
             </li>
 
             <li className="flex items-start gap-3">
               <MapPin className="text-red-500 mt-0.5 shrink-0" size={18} />
               <span>
-                Betim – MG<br />
+                {COMPANY_INFO.address.city} – {COMPANY_INFO.address.state}<br />
                 Região Metropolitana de Belo Horizonte
               </span>
             </li>
@@ -134,7 +188,7 @@ const Footer: React.FC = () => {
           </p>
 
           <a
-            href="https://wa.me/5531984630800"
+            href={generateWhatsAppLink()}
             target="_blank"
             rel="noopener noreferrer"
             className="
@@ -162,19 +216,27 @@ const Footer: React.FC = () => {
             © {new Date().getFullYear()} Construbet — Todos os direitos reservados.
           </span>
 
-          <div className="flex items-center gap-6">
-            <a
-              href="/politica-de-privacidade"
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <Link
+              to="/politicas"
               className="hover:text-red-400 transition-colors"
             >
               Política de Privacidade
-            </a>
-            <a
-              href="/termos"
+            </Link>
+            <Link
+              to="/termos"
               className="hover:text-red-400 transition-colors"
             >
               Termos de Uso
-            </a>
+            </Link>
+            <button
+              type="button"
+              onClick={openCookieSettings}
+              className="inline-flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer text-blue-200/90"
+            >
+              <ShieldCheck size={15} className="text-emerald-400" />
+              Gerenciar cookies
+            </button>
           </div>
         </div>
       </div>

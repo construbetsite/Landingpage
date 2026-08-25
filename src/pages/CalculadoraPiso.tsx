@@ -9,6 +9,7 @@ import ResultCard from "../components/ResultCard";
 import { useCalculatorValidation } from "../hooks/useCalculatorValidation";
 import { calculateFloor } from "../utils/calculateFloor";
 import { parseNumberInput, isPositiveNumber } from "../utils/numberHelpers";
+import SEO from "../components/SEO/SEO";
 
 export default function CalculadoraPiso() {
   const navigate = useNavigate();
@@ -103,7 +104,11 @@ export default function CalculadoraPiso() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-900 sm:px-6 lg:px-8">
-    
+      <SEO
+        title="Calculadora de Piso e Revestimento | Construbet"
+        description="Calcule a quantidade exata de pisos e revestimentos para sua obra com percentual de perda e estimativa de caixas."
+        canonical="/calculadora/piso"
+      />
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
         <section className="rounded-4xl border border-slate-200 bg-white p-8 shadow-[0_20px_80px_rgba(15,23,42,0.08)] sm:p-10">
           <div className="flex flex-wrap items-center justify-between gap-3">

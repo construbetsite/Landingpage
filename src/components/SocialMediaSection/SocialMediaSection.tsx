@@ -3,24 +3,25 @@
 
 import { motion } from "framer-motion";
 import { Facebook, Instagram, Youtube, ArrowRight } from "lucide-react";
+import { SOCIAL_LINKS } from "../../config/constants";
 
 const socialLinks = [
   {
     name: "Facebook",
     icon: Facebook,
-    url: "https://www.facebook.com/construbet",
+    url: SOCIAL_LINKS.facebook,
     color: "hover:bg-[#1877F2]",
   },
   {
     name: "Instagram",
     icon: Instagram,
-    url: "https://www.instagram.com/construbet",
+    url: SOCIAL_LINKS.instagram,
     color: "hover:bg-[#E4405F]",
   },
   {
     name: "YouTube",
     icon: Youtube,
-    url: "https://www.youtube.com/@construbet",
+    url: SOCIAL_LINKS.youtube,
     color: "hover:bg-[#FF0000]",
   },
 ];
@@ -91,7 +92,7 @@ export default function SocialMediaSection() {
               Mais de 45 anos construindo confiança, agora também nas redes sociais.
             </p>
             <motion.a
-              href="https://www.instagram.com/construbet"
+              href={SOCIAL_LINKS.instagram}
               target="_blank"
               rel="noreferrer"
               whileHover={{ y: -2, scale: 1.01 }}

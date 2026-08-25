@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -10,9 +11,12 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { COMPANY_INFO, generateWhatsAppLink } from "../../config/constants";
+import { scrollToElement } from "../../hooks/useScrollToAnchor";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     AOS.init({
@@ -20,6 +24,18 @@ export default function Header() {
       once: true,
     });
   }, []);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+    setMenuOpen(false);
+    if (target.startsWith('#') || target.startsWith('/#')) {
+      const hash = target.includes('#') ? `#${target.split('#')[1]}` : target;
+      if (location.pathname === '/') {
+        e.preventDefault();
+        scrollToElement(hash);
+        window.history.pushState(null, '', hash);
+      }
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
@@ -43,18 +59,19 @@ export default function Header() {
           <div className="flex items-center gap-6">
 
             <a
-              href="tel:3135322800"
+              href={COMPANY_INFO.phoneTel}
               className="flex items-center gap-2 hover:text-red-300 transition"
             >
               <Phone size={15} />
 
-              (31) 3532-2800
+              {COMPANY_INFO.phoneFormatted}
 
             </a>
 
             <a
-              href="https://wa.me/5531984630800"
+              href={generateWhatsAppLink()}
               target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-green-300 transition"
             >
               <MessageCircle size={15} />
@@ -79,9 +96,14 @@ export default function Header() {
 
             {/* Logo */}
 
-            <a
-              href="/"
+            <Link
+              to="/"
               className="flex items-center shrink-0"
+              onClick={() => {
+                if (location.pathname === '/') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
             >
 
               <img
@@ -90,51 +112,52 @@ export default function Header() {
                 className="h-16 lg:h-20 w-auto object-contain"
               />
 
-            </a>
+            </Link>
 
             {/* Desktop */}
 
             <div className="hidden lg:flex items-center gap-10">
 
-              <a
-              href="#empresa"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
-            >
-              A Construbet
-            </a>
+              <Link
+                to="/#empresa"
+                onClick={(e) => handleNavClick(e, '#empresa')}
+                className="text-slate-700 hover:text-red-600 font-semibold transition-colors"
+              >
+                A Construbet
+              </Link>
 
-            <a
-              href="#produtos"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
-            >
-              Produtos
-            </a>
+              <Link
+                to="/#produtos"
+                onClick={(e) => handleNavClick(e, '#produtos')}
+                className="text-slate-700 hover:text-red-600 font-semibold transition-colors"
+              >
+                Produtos
+              </Link>
 
-            <a
-              href="#ofertas"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
-            >
-              Ofertas
-            </a>
+              <Link
+                to="/#ofertas"
+                onClick={(e) => handleNavClick(e, '#ofertas')}
+                className="text-slate-700 hover:text-red-600 font-semibold transition-colors"
+              >
+                Ofertas
+              </Link>
 
-            <a
-              href="/blog"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
-            >
-              Blog
-            </a>
+              <Link
+                to="/blog"
+                onClick={() => setMenuOpen(false)}
+                className="text-slate-700 hover:text-red-600 font-semibold transition-colors"
+              >
+                Blog
+              </Link>
             </div>
 
             {/* CTA */}
 
             <div className="hidden lg:flex">
 
-              <a
-                href="#contato"
+              <Link
+                to="/#contato"
+                onClick={(e) => handleNavClick(e, '#contato')}
                 className="
                 flex
                 items-center
@@ -154,7 +177,7 @@ export default function Header() {
 
                 <ArrowRight size={18} />
 
-              </a>
+              </Link>
 
             </div>
 
@@ -185,44 +208,43 @@ export default function Header() {
 
           <div className="bg-white">
 
-            <a
-              href="#empresa"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
+            <Link
+              to="/#empresa"
+              onClick={(e) => handleNavClick(e, '#empresa')}
+              className="block px-6 py-4 border-b hover:bg-gray-50 font-medium text-slate-800"
             >
               A Construbet
-            </a>
+            </Link>
 
-            <a
-              href="#produtos"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
+            <Link
+              to="/#produtos"
+              onClick={(e) => handleNavClick(e, '#produtos')}
+              className="block px-6 py-4 border-b hover:bg-gray-50 font-medium text-slate-800"
             >
               Produtos
-            </a>
+            </Link>
 
-            <a
-              href="#ofertas"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
+            <Link
+              to="/#ofertas"
+              onClick={(e) => handleNavClick(e, '#ofertas')}
+              className="block px-6 py-4 border-b hover:bg-gray-50 font-medium text-slate-800"
             >
               Ofertas
-            </a>
+            </Link>
 
-            <a
-              href="/blog"
+            <Link
+              to="/blog"
               onClick={() => setMenuOpen(false)}
-              className="block px-6 py-4 border-b hover:bg-gray-50"
+              className="block px-6 py-4 border-b hover:bg-gray-50 font-medium text-slate-800"
             >
               Blog
-            </a>
-
-   
+            </Link>
 
             <div className="p-6">
 
-              <a
-                href="#contato"
+              <Link
+                to="/#contato"
+                onClick={(e) => handleNavClick(e, '#contato')}
                 className="
                 flex
                 justify-center
@@ -241,7 +263,7 @@ export default function Header() {
 
                 <ArrowRight size={18} />
 
-              </a>
+              </Link>
 
             </div>
 

@@ -6,7 +6,8 @@
   "scripts": {
     "clean": "rimraf node_modules/.vite",
     "dev": "vite",
-    "build": "npx tsc -b && vite build",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "build": "npx tsc -b && node scripts/generate-sitemap.mjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -19,6 +20,7 @@
     "@prismicio/react": "^3.2.1",
     "@supabase/supabase-js": "^2.110.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tanstack/react-query": "^5.102.3",
     "aos": "^2.3.4",
     "axios": "^1.18.1",
     "dompurify": "^3.2.6",
@@ -28,6 +30,7 @@
     "framer-motion": "^12.34.0",
     "gsap": "^3.14.2",
     "lucide-react": "^0.514.0",
+    "marked": "^18.0.11",
     "mysql2": "^3.22.5",
     "pdfkit": "^0.19.1",
     "react": "^18.3.1",

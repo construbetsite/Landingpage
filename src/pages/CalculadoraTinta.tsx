@@ -1,7 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { BadgeAlert, Palette, Sparkles } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import CalculatorCard from "../components/CalculatorCard";
 import InputField from "../components/InputField";
@@ -10,6 +9,7 @@ import ResultCard from "../components/ResultCard";
 import { useCalculatorValidation } from "../hooks/useCalculatorValidation";
 import { calculatePaint } from "../utils/calculatePaint";
 import { parseNumberInput, isPositiveNumber } from "../utils/numberHelpers";
+import SEO from "../components/SEO/SEO";
 
 export default function CalculadoraTinta() {
   const navigate = useNavigate();
@@ -107,11 +107,11 @@ export default function CalculadoraTinta() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-900 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>Calculadora de Tinta | Construbet</title>
-        <meta name="description" content="Estime o volume de tinta necessário com base em área útil, demãos e rendimento do produto." />
-        <link rel="canonical" href="https://www.construbet.com.br/calculadora/tinta" />
-      </Helmet>
+      <SEO
+        title="Calculadora de Tinta | Construbet"
+        description="Estime a quantidade exata de tinta necessária para a sua pintura com base em área, demãos e rendimento."
+        canonical="/calculadora/tinta"
+      />
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
         <section className="rounded-4xl border border-slate-200 bg-white p-8 shadow-[0_20px_80px_rgba(15,23,42,0.08)] sm:p-10">
           <div className="flex flex-wrap items-center justify-between gap-3">

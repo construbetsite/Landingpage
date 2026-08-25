@@ -1,5 +1,5 @@
 // src/services/api/products.ts
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:10000/api';
 
 export async function getProducts(filters?: {
   categoryId?: string;

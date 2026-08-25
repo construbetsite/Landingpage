@@ -139,7 +139,7 @@ const RelatedPosts = ({ currentPost }: { currentPost: BlogPost }) => {
     <div className="mt-16">
       <h3 className="text-xl font-black text-[#072B63] mb-6">Continue lendo</h3>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {related.map((p:any) => {
+        {related.map((p: BlogPost) => {
           const img = getImageUrl(p.image_url) || PLACEHOLDER_IMAGE;
           return (
             <Link
@@ -203,6 +203,8 @@ export default function BlogPostDetail() {
   const navigate = useNavigate();
   const { post, loading, error, notFound } = useBlogPost(slug);
 
+  const safeContent = useMemo(() => sanitizeHtml(post?.content || ""), [post?.content]);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [slug]);
@@ -239,7 +241,6 @@ export default function BlogPostDetail() {
   const imageUrl = getImageUrl(post.image_url) || PLACEHOLDER_IMAGE;
   const publishedAt = post.published_at || post.created_at;
   const shareUrl = `${window.location.origin}/blog/${post.slug}`;
-  const safeContent = useMemo(() => sanitizeHtml(post.content || ""), [post.content]);
   const videoEmbeds = [post.video1, post.video2].filter(Boolean).map((v) => v as string);
 
   return (

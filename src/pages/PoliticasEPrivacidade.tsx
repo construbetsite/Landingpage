@@ -1,18 +1,15 @@
-import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import { COMPANY_INFO } from "../config/constants";
+import SEO from "../components/SEO/SEO";
 
 export default function PoliticaEPrivacidade() {
   return (
-    <HelmetProvider>
-      <main className="min-h-screen bg-white text-gray-800 pt-24 px-6 pb-12 max-w-4xl mx-auto">
-        <Helmet>
-          <title>Política de Privacidade e Termos de Uso | Construbet</title>
-          <meta
-            name="description"
-            content="Política de privacidade da Construbet. Saiba como tratamos seus dados pessoais (nome, telefone, e-mail) e monitoramos sua experiência no site para melhorar nossos serviços, em conformidade com a LGPD."
-          />
-          <link rel="canonical" href="https://construbet.com.br/politica" />
-        </Helmet>
+    <main className="min-h-screen bg-white text-gray-800 pt-24 px-6 pb-12 max-w-4xl mx-auto">
+      <SEO
+        title="Política de Privacidade e Termos de Uso | Construbet"
+        description="Política de privacidade da Construbet. Saiba como tratamos seus dados pessoais (nome, telefone, e-mail) em conformidade com a LGPD."
+        canonical="/politicas"
+      />
 
         <h1 className="text-3xl md:text-4xl font-bold mb-2 text-center text-[#1e3a5f]">
           Política de Privacidade e Termos de Uso
@@ -160,12 +157,12 @@ export default function PoliticaEPrivacidade() {
           </section>
 
           <div className="mt-12 pt-6 border-t border-gray-200 text-center text-gray-600 not-italic">
-            <p className="font-semibold text-[#1e3a5f]">Construbet</p>
-            <p>Endereço da empresa – Cidade, UF</p>
+            <p className="font-semibold text-[#1e3a5f]">{COMPANY_INFO.name}</p>
+            <p>{COMPANY_INFO.address.full}</p>
             <p>
               Contato:{" "}
-              <a href="tel:+5531984630800" className="text-[#F58220] hover:underline">
-                (31) 98463-0800
+              <a href={COMPANY_INFO.phoneTel} className="text-[#F58220] hover:underline">
+                {COMPANY_INFO.phoneFormatted}
               </a>
             </p>
           </div>
@@ -178,8 +175,7 @@ export default function PoliticaEPrivacidade() {
               ← Voltar para o início
             </Link>
           </div>
-        </div>
-      </main>
-    </HelmetProvider>
-  );
-}
+              </div>
+            </main>
+          );
+        }

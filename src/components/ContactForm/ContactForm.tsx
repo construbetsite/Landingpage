@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Send, 
-  Phone, 
-  Mail, 
-  User, 
-  List, 
-  Building2, 
+import {
+  Send,
+  Phone,
+  Mail,
+  User,
+  List,
+  Building2,
   Handshake,
   Store,
   Truck
 } from "lucide-react";
+import { generateWhatsAppLink } from "../../config/constants";
 
 // Serviços e produtos da Construbet
 const services = [
@@ -62,7 +63,7 @@ export default function ContactForm() {
   ) {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-    
+
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -83,8 +84,7 @@ Olá, vim pelo site e gostaria de mais informações sobre os produtos e serviç
 *Mensagem:* ${form.message || "Não informada"}
     `;
 
-    const encoded = encodeURIComponent(whatsappMessage.trim());
-    window.open(`https://wa.me/5531984630800?text=${encoded}`, "_blank");
+    window.open(generateWhatsAppLink(whatsappMessage), "_blank");
   }
 
   return (
@@ -96,7 +96,7 @@ Olá, vim pelo site e gostaria de mais informações sobre os produtos e serviç
 
         {/* Cabeçalho */}
         <div className="text-center mb-10 md:mb-14">
-   
+
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#072B63] leading-tight">
             Fale com a{' '}
             <span className="text-red-600 relative">
@@ -105,7 +105,7 @@ Olá, vim pelo site e gostaria de mais informações sobre os produtos e serviç
             </span>
           </h2>
           <p className="mt-4 text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">
-            Preencha o formulário e nossa equipe especializada entrará em contato 
+            Preencha o formulário e nossa equipe especializada entrará em contato
             para atender sua obra ou projeto com agilidade e qualidade.
           </p>
         </div>
@@ -218,8 +218,8 @@ Olá, vim pelo site e gostaria de mais informações sobre os produtos e serviç
                   Interessado em parcerias ou compras em grande quantidade?
                 </h3>
                 <p className="text-gray-600 text-xs md:text-sm mt-1">
-                  A Construbet atende construtoras, engenheiros, arquitetos e empresas 
-                  com condições especiais para compras corporativas. Marcamos, atendemos e 
+                  A Construbet atende construtoras, engenheiros, arquitetos e empresas
+                  com condições especiais para compras corporativas. Marcamos, atendemos e
                   entregamos onde você precisar.
                 </p>
                 <label className="flex items-center gap-2 mt-3 cursor-pointer">

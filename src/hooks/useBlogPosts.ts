@@ -1,16 +1,6 @@
-import {
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-
+import { useQuery } from "@tanstack/react-query";
 import { getPosts } from "../services/blogApi";
-
-import type {
-  BlogPost,
-  ListBlogPostsParams,
-  Pagination,
-} from "../types/blog";
+import type { BlogPost, ListBlogPostsParams, Pagination } from "../types/blog";
 
 export interface UseBlogPostsResult {
   posts: BlogPost[];
@@ -31,83 +21,36 @@ export function useBlogPosts(
     featured,
   } = params;
 
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const query = useQuery({
+    queryKey: ["blog-posts", { page, limit, category, tag, featured }],
+    queryFn: async ({ signal }) => {
+      return await getPosts(
+        {
+          page,
+          limit,
+          status: true,
+          ...(category ? { category } : {}),
+          ...(tag ? { tag } : {}),
+          ...(featured !== undefined ? { featured } : {}),
+        },
+        { signal }
+      );
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const [pagination, setPagination] =
-    useState<Pagination>({
+  return {
+    posts: query.data?.data ?? [],
+    pagination: query.data?.pagination ?? {
       page,
       limit,
       total: 0,
       totalPages: 0,
-    });
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState<string | null>(null);
-
-  const fetchPosts = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await getPosts({
-        page,
-        limit,
-        status: true,
-        ...(category ? { category } : {}),
-        ...(tag ? { tag } : {}),
-        ...(featured !== undefined
-          ? { featured }
-          : {}),
-      });
-
-      setPosts(response.data ?? []);
-
-      setPagination(
-        response.pagination ?? {
-          page,
-          limit,
-          total: response.data?.length ?? 0,
-          totalPages: 1,
-        }
-      );
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Erro ao carregar os posts.";
-
-      setError(message);
-      setPosts([]);
-
-      setPagination({
-        page,
-        limit,
-        total: 0,
-        totalPages: 0,
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    page,
-    limit,
-    category,
-    tag,
-    featured,
-  ]);
-
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
-
-  return {
-    posts,
-    pagination,
-    loading,
-    error,
-    refetch: fetchPosts,
+    },
+    loading: query.isLoading,
+    error: query.error ? (query.error as Error).message : null,
+    refetch: () => {
+      query.refetch();
+    },
   };
 }

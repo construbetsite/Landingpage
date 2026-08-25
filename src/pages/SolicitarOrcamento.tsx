@@ -1,10 +1,11 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import CalculatorCard from "../components/CalculatorCard";
 import InputField from "../components/InputField";
 import PrimaryButton from "../components/PrimaryButton";
+import { generateWhatsAppLink, COMPANY_INFO } from "../config/constants";
+import SEO from "../components/SEO/SEO";
 
 export default function SolicitarOrcamento() {
   const navigate = useNavigate();
@@ -25,7 +26,8 @@ export default function SolicitarOrcamento() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    window.location.href = `https://wa.me/5531984630800?text=${encodeURIComponent(`Olá! Tenho interesse em um orçamento.\nNome: ${form.name}\nTelefone: ${form.phone}\nWhatsApp: ${form.whatsapp}\nCidade: ${form.city}\nProdutos: ${form.products}\nMensagem: ${form.message}`)}`;
+    const msg = `Olá! Tenho interesse em um orçamento.\nNome: ${form.name}\nTelefone: ${form.phone}\nWhatsApp: ${form.whatsapp}\nCidade: ${form.city}\nProdutos: ${form.products}\nMensagem: ${form.message}`;
+    window.location.href = generateWhatsAppLink(msg);
   };
 
   const handleBack = () => {
@@ -39,11 +41,11 @@ export default function SolicitarOrcamento() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-16 text-slate-900 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>Solicitar Orçamento | Construbet</title>
-        <meta name="description" content="Solicite orçamento de materiais para sua obra com um atendimento rápido via WhatsApp." />
-        <link rel="canonical" href="https://www.construbet.com.br/orcamento" />
-      </Helmet>
+      <SEO
+        title="Solicitar Orçamento | Construbet"
+        description="Solicite orçamento de materiais para sua obra com um atendimento rápido via WhatsApp com a equipe da Construbet."
+        canonical="/orcamento"
+      />
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
         <section className="rounded-4xl border border-slate-200 bg-white p-8 shadow-[0_20px_80px_rgba(15,23,42,0.08)] sm:p-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -62,8 +64,8 @@ export default function SolicitarOrcamento() {
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid gap-4 md:grid-cols-2">
                   <InputField id="name" label="Nome" name="name" value={form.name} onChange={handleChange} placeholder="Seu nome" required />
-                  <InputField id="phone" label="Telefone" name="phone" value={form.phone} onChange={handleChange} placeholder="(31) 98463-0800" required /> 
-                  <InputField id="whatsapp" label="WhatsApp" name="whatsapp" value={form.whatsapp} onChange={handleChange} placeholder="(31) 99999-9999" required />
+                  <InputField id="phone" label="Telefone" name="phone" value={form.phone} onChange={handleChange} placeholder={COMPANY_INFO.phoneFormatted} required />
+                  <InputField id="whatsapp" label="WhatsApp" name="whatsapp" value={form.whatsapp} onChange={handleChange} placeholder={COMPANY_INFO.whatsappFormatted} required />
                   <InputField id="city" label="Cidade" name="city" value={form.city} onChange={handleChange} placeholder="Betim" required />
                 </div>
                 <InputField id="products" label="Produtos" name="products" value={form.products} onChange={handleChange} placeholder="Piso, tinta, argamassa..." required />

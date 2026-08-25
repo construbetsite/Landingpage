@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import type { MouseEvent, ComponentType } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import {
   BookOpen,
@@ -7,11 +7,12 @@ import {
   Lightbulb,
   ArrowUpRight,
   Tag,
+  type LucideProps,
 } from "lucide-react";
 import { useBlogCategories } from "../../hooks/useBlogCategories";
 
 // Mapeamento de ícones para categorias conhecidas
-const categoryIcons: Record<string, any> = {
+const categoryIcons: Record<string, ComponentType<LucideProps>> = {
   artigos: FileText,
   dicas: Lightbulb,
   perguntas: HelpCircle,

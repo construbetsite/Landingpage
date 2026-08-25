@@ -2,13 +2,14 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { generateWhatsAppLink } from "../../config/constants";
 
 export default function HeaderPolitica() {
   const [open, setOpen] = useState(false);
 
   const navLinks = [
     { name: "Início", href: "/" },
-   
+
   ];
 
   return (
@@ -45,14 +46,16 @@ export default function HeaderPolitica() {
           >
             <img
               src="/assets/logo.webp"
-              alt="Clínicas Reunidas"
+              alt="Construbet"
               className="w-28 object-contain hover:scale-105 transition duration-300"
             />
           </Link>
 
           {/* CTA DESKTOP */}
           <a
-            href="#contato"
+            href={generateWhatsAppLink()}
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden md:flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-6 py-2.5 rounded-full font-semibold shadow-md transition-all duration-300 hover:scale-105"
           >
             <Phone size={16} />
@@ -79,7 +82,7 @@ export default function HeaderPolitica() {
       >
         <div className="flex justify-between items-center p-6 border-b border-[#E5E7EB]">
           <span className="font-semibold text-[#1F2937]">
-            Clínicas Reunidas
+            Construbet
           </span>
           <button
             onClick={() => setOpen(false)}
@@ -103,7 +106,9 @@ export default function HeaderPolitica() {
 
           {/* CTA MOBILE */}
           <a
-            href="#contato"
+            href={generateWhatsAppLink()}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setOpen(false)}
             className="mt-6 bg-[#10B981] hover:bg-[#059669] text-white font-semibold px-6 py-3 rounded-full text-center shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
           >

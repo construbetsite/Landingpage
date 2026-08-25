@@ -231,19 +231,15 @@ export async function getFeaturedPosts(
 
 export async function getPostBySlug(
   slug: string,
-  options: BlogRequestOptions = {}
+  optionsOrSignal?: BlogRequestOptions | AbortSignal
 ): Promise<BlogPost | null> {
+  const options: BlogRequestOptions =
+    optionsOrSignal instanceof AbortSignal
+      ? { signal: optionsOrSignal }
+      : optionsOrSignal || {};
+
   const encodedSlug = encodeURIComponent(slug);
-
   const endpoint = `/posts/slug/${encodedSlug}`;
-
-  console.log("========================================");
-  console.log("🔎 BLOG - BUSCA DE POST");
-  console.log("Slug recebido:", slug);
-  console.log("Slug codificado:", encodedSlug);
-  console.log("Endpoint:", endpoint);
-  console.log("URL final:", `${API_BASE}/api/blog${endpoint}`);
-  console.log("========================================");
 
   try {
     const response = await request<BlogItemResponse>(
@@ -251,30 +247,37 @@ export async function getPostBySlug(
       options
     );
 
-    console.log("📥 Resposta do post:", response);
-
     if (!response.data) {
-      console.warn("⚠️ API respondeu sem data.");
       return null;
     }
 
     if (response.data.status === false) {
-      console.warn("⚠️ Post encontrado, mas está publicado=false.");
       return null;
     }
 
-    console.log("✅ POST ENCONTRADO:", response.data);
-
     return response.data;
   } catch (error) {
-    console.error("❌ ERRO AO BUSCAR POST:", error);
+    // Abort/Cancelamento normal do React Query ou desmontagem: não polui console
+    if (
+      (error instanceof DOMException && error.name === "AbortError") ||
+      (error instanceof BlogApiError && error.message.includes("cancelada")) ||
+      (options.signal && options.signal.aborted)
+    ) {
+      throw error;
+    }
 
     if (
       error instanceof BlogApiError &&
       error.status === 404
     ) {
-      console.warn("⚠️ API retornou 404 para:", slug);
+      if (import.meta.env.DEV) {
+        console.warn("⚠️ Post não encontrado (404) para slug:", slug);
+      }
       return null;
+    }
+
+    if (import.meta.env.DEV) {
+      console.error("❌ Erro ao consultar post:", error);
     }
 
     throw error;
@@ -296,3 +299,14 @@ export async function getCategories(
 
   return response.data ?? [];
 }
+
+// ============================================================
+// OBJETO EXPORTADO PADRÃO
+// ============================================================
+
+export const blogApi = {
+  getPosts,
+  getFeaturedPosts,
+  getPostBySlug,
+  getCategories,
+};
