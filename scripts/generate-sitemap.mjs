@@ -45,10 +45,10 @@ async function fetchDynamicRoutes() {
     console.warn('⚠️ Não foi possível carregar produtos da API para o sitemap:', err.message);
   }
 
-  // Buscar posts do blog
+  // Buscar posts do blog (mesmo padrão da API consumida pelo frontend: /api/blog/posts)
   try {
     const cleanBlogUrl = BLOG_API_URL.replace(/\/+$/, '');
-    const res = await fetch(`${cleanBlogUrl}/posts?status=true&limit=100`, { timeout: 5000 });
+    const res = await fetch(`${cleanBlogUrl}/api/blog/posts?status=true&limit=100`, { timeout: 5000 });
     if (res.ok) {
       const data = await res.json();
       const posts = Array.isArray(data) ? data : data.data || [];

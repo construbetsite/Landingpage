@@ -51,18 +51,33 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://site.construbet.com.br/produto/rorato-tanque-fibra-2bj-138x69-ge</loc>
+    <loc>https://site.construbet.com.br/blog/como-escolher-revestimento-ideal</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://site.construbet.com.br/produto/kit-debba-square-roca-branco-bacia-caixa-assento-anel-fixacao-ligacao-c329723003</loc>
+    <loc>https://site.construbet.com.br/blog/tipo-de-cimento-ideal</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://site.construbet.com.br/produto/tijolos</loc>
+    <loc>https://site.construbet.com.br/blog/dicas-para-pintar-paredes</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://site.construbet.com.br/blog/como-calcular-quantidade-de-tijolos</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://site.construbet.com.br/blog/diferenca-entre-argamassa-e-reboco</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://site.construbet.com.br/blog/quando-usar-impermeabilizante</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>
