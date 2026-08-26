@@ -9,6 +9,9 @@ const SITE_URL = (process.env.VITE_SITE_URL || 'https://site.construbet.com.br')
 const API_BASE = process.env.VITE_API_BASE || 'http://localhost:10000/api';
 const BLOG_API_URL = process.env.VITE_API_URL || 'http://localhost:10000';
 
+// Sempre chama o backend para refletir exatamente o que está cadastrado no banco.
+// Em dev sem backend, gera apenas as rotas estáticas (sem URLs inventadas).
+
 const staticRoutes = [
   { path: '', priority: '1.0', changefreq: 'daily' },
   { path: '/produtos', priority: '0.9', changefreq: 'daily' },
@@ -25,27 +28,30 @@ const staticRoutes = [
 async function fetchDynamicRoutes() {
   const dynamicRoutes = [];
 
-  // Buscar produtos
+  // Buscar produtos ativos (fonte de verdade: backend/Supabase)
   try {
     const res = await fetch(`${API_BASE}/product?active=true`, { timeout: 5000 });
     if (res.ok) {
       const data = await res.json();
       const products = Array.isArray(data) ? data : data.data || [];
       products.forEach((p) => {
-        if (p.slug) {
+        if (p.slug && p.active !== false) {
           dynamicRoutes.push({
             path: `/produto/${p.slug}`,
             priority: '0.8',
             changefreq: 'weekly',
+            lastmod: p.updatedAt || p.updated_at || null,
           });
         }
       });
+    } else {
+      console.warn(`⚠️ Produtos: resposta ${res.status} da API (${API_BASE}/product)`);
     }
   } catch (err) {
     console.warn('⚠️ Não foi possível carregar produtos da API para o sitemap:', err.message);
   }
 
-  // Buscar posts do blog (mesmo padrão da API consumida pelo frontend: /api/blog/posts)
+  // Buscar posts publicados do blog (mesmo padrão da API consumida pelo frontend)
   try {
     const cleanBlogUrl = BLOG_API_URL.replace(/\/+$/, '');
     const res = await fetch(`${cleanBlogUrl}/api/blog/posts?status=true&limit=100`, { timeout: 5000 });
@@ -53,33 +59,20 @@ async function fetchDynamicRoutes() {
       const data = await res.json();
       const posts = Array.isArray(data) ? data : data.data || [];
       posts.forEach((p) => {
-        if (p.slug) {
+        if (p.slug && p.status !== false) {
           dynamicRoutes.push({
             path: `/blog/${p.slug}`,
             priority: '0.7',
             changefreq: 'weekly',
+            lastmod: p.updated_at || p.published_at || p.updatedAt || null,
           });
         }
       });
+    } else {
+      console.warn(`⚠️ Posts: resposta ${res.status} da API (${cleanBlogUrl}/api/blog/posts)`);
     }
   } catch (err) {
     console.warn('⚠️ Não foi possível carregar posts do blog da API para o sitemap:', err.message);
-    // Slugs conhecidos para fallback estático
-    const fallbackSlugs = [
-      'como-escolher-revestimento-ideal',
-      'tipo-de-cimento-ideal',
-      'dicas-para-pintar-paredes',
-      'como-calcular-quantidade-de-tijolos',
-      'diferenca-entre-argamassa-e-reboco',
-      'quando-usar-impermeabilizante',
-    ];
-    fallbackSlugs.forEach((slug) => {
-      dynamicRoutes.push({
-        path: `/blog/${slug}`,
-        priority: '0.6',
-        changefreq: 'weekly',
-      });
-    });
   }
 
   return dynamicRoutes;
@@ -94,14 +87,15 @@ async function generateSitemap() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${allRoutes
-      .map(
-        (r) => `  <url>
+  .map(
+    (r) => ` <url>
     <loc>${SITE_URL}${r.path}</loc>
-    <changefreq>${r.changefreq || 'weekly'}</changefreq>
+${r.lastmod ? `    <lastmod>${new Date(r.lastmod).toISOString()}</lastmod>
+` : ''}    <changefreq>${r.changefreq || 'weekly'}</changefreq>
     <priority>${r.priority || '0.7'}</priority>
-  </url>`
-      )
-      .join('\n')}
+ </url>`
+  )
+  .join('\n')}
 </urlset>
 `;
 

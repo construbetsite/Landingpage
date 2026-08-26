@@ -1,83 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
+ <url>
     <loc>https://site.construbet.com.br</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/produtos</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/blog</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/orcamento</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/especialista</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/politicas</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/calculadora/piso</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/calculadora/tinta</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/calculadora/argamassa</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
+ </url>
+ <url>
     <loc>https://site.construbet.com.br/calculadora/rejunte</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://site.construbet.com.br/blog/como-escolher-revestimento-ideal</loc>
+ </url>
+ <url>
+    <loc>https://site.construbet.com.br/produto/rorato-tanque-fibra-2bj-138x69-ge</loc>
+    <lastmod>2026-08-25T14:59:11.338Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://site.construbet.com.br/blog/tipo-de-cimento-ideal</loc>
+    <priority>0.8</priority>
+ </url>
+ <url>
+    <loc>https://site.construbet.com.br/produto/kit-debba-square-roca-branco-bacia-caixa-assento-anel-fixacao-ligacao-c329723003</loc>
+    <lastmod>2026-08-19T17:13:50.080Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://site.construbet.com.br/blog/dicas-para-pintar-paredes</loc>
+    <priority>0.8</priority>
+ </url>
+ <url>
+    <loc>https://site.construbet.com.br/produto/tijolos</loc>
+    <lastmod>2026-08-25T20:59:21.096Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://site.construbet.com.br/blog/como-calcular-quantidade-de-tijolos</loc>
+    <priority>0.8</priority>
+ </url>
+ <url>
+    <loc>https://site.construbet.com.br/blog/como-escolher-o-piso-ideal-para-cada-ambiente-da-sua-casa</loc>
+    <lastmod>2026-08-26T14:40:51.371Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://site.construbet.com.br/blog/diferenca-entre-argamassa-e-reboco</loc>
+    <priority>0.7</priority>
+ </url>
+ <url>
+    <loc>https://site.construbet.com.br/blog/planejamento-de-obra-como-economizar-ate-30-com-compras-inteligentes</loc>
+    <lastmod>2026-08-25T22:08:03.197Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://site.construbet.com.br/blog/quando-usar-impermeabilizante</loc>
+    <priority>0.7</priority>
+ </url>
+ <url>
+    <loc>https://site.construbet.com.br/blog/ceramica-ou-porcelanato-qual-o-melhor-para-sua-obra-guia-completo-2026</loc>
+    <lastmod>2026-08-25T14:49:58.644Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
+    <priority>0.7</priority>
+ </url>
 </urlset>
