@@ -13,6 +13,9 @@ export type ConsentStatus = 'granted' | 'denied' | 'custom' | null;
 
 const CONSENT_STORAGE_KEY = 'construbet_cookie_consent';
 const PREFERENCES_STORAGE_KEY = 'construbet_cookie_preferences';
+/** Cookie próprio de consentimento (LGPD): validade de 1 ano. */
+export const CONSENT_COOKIE_NAME = 'cookie_consent';
+const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 ano em segundos
 const CONSENT_EVENT = 'construbet_cookie_consent_change';
 
 export const DEFAULT_PREFERENCES: CookiePreferences = {
@@ -23,20 +26,50 @@ export const DEFAULT_PREFERENCES: CookiePreferences = {
 };
 
 /**
- * Retorna se o usuário já concedeu consentimento geral
+ * Lê o cookie_consent (com validade de 1 ano).
+ */
+function readConsentCookie(): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith(`${CONSENT_COOKIE_NAME}=`));
+  return match ? decodeURIComponent(match.split('=')[1]) : null;
+}
+
+/**
+ * Grava o cookie de consentimento com validade de 1 ano.
+ */
+function writeConsentCookie(status: string) {
+  if (typeof document === 'undefined') return;
+  const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = `${CONSENT_COOKIE_NAME}=${encodeURIComponent(status)}; Path=/; Max-Age=${CONSENT_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
+}
+
+/**
+ * Retorna se o usuário já concedeu consentimento geral.
+ * Lê primeiro o cookie_consent (persistência entre abas/sessões
+ * e a fonte de verdade para o banner), com fallback para localStorage
+ * (migração de usuários antigos).
  */
 export function getCookieConsent(): boolean {
   if (typeof window === 'undefined') return false;
-  const status = localStorage.getItem(CONSENT_STORAGE_KEY);
+  const cookieStatus = readConsentCookie();
+  const status = cookieStatus || localStorage.getItem(CONSENT_STORAGE_KEY);
   return status === 'granted' || status === 'custom';
 }
 
 /**
- * Retorna o status de consentimento bruto ('granted' | 'denied' | 'custom' | null)
+ * Retorna o status de consentimento bruto ('granted' | 'denied' | 'custom' | null).
+ * A prioridade é o cookie_consent, com fallback para localStorage.
  */
 export function getConsentStatus(): ConsentStatus {
   if (typeof window === 'undefined') return null;
-  return (localStorage.getItem(CONSENT_STORAGE_KEY) as ConsentStatus) || null;
+  const cookieStatus = readConsentCookie();
+  const status =
+    (cookieStatus as ConsentStatus) ||
+    (localStorage.getItem(CONSENT_STORAGE_KEY) as ConsentStatus) ||
+    null;
+  return status;
 }
 
 /**
@@ -63,7 +96,7 @@ export function setCookieConsent(
   if (typeof window === 'undefined') return;
 
   localStorage.setItem(CONSENT_STORAGE_KEY, status);
-
+  writeConsentCookie(status); // Cookie próprio com validade de 1 ano
   const updatedPrefs: CookiePreferences = {
     necessary: true,
     analytics: status === 'granted' ? true : status === 'denied' ? false : !!preferences?.analytics,
@@ -88,6 +121,10 @@ export function resetCookieConsent() {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(CONSENT_STORAGE_KEY);
   localStorage.removeItem(PREFERENCES_STORAGE_KEY);
+  // Remove o cookie de consentimento (expiração imediata)
+  if (typeof document !== 'undefined') {
+    document.cookie = `${CONSENT_COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax`;
+  }
   window.dispatchEvent(new CustomEvent('open-cookie-settings'));
 }
 

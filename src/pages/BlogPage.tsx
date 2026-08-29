@@ -244,7 +244,7 @@ export default function BlogPage() {
         canonical={activeCategory ? `/blog?categoria=${encodeURIComponent(activeCategory)}` : "/blog"}
       />
 
-      {/* Hero */}
+      {/*  */}
       <section className="relative overflow-hidden px-4 sm:px-6 pt-20 md:pt-28 pb-14">
         <div className="absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[#072B63]/5 blur-[100px]" />
         <div className="relative mx-auto max-w-7xl pt-5">
@@ -440,7 +440,7 @@ export default function BlogPage() {
                 especializado em Betim e região.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href={ECOMMERCE_URL || "#"}
                 target="_blank"
@@ -450,12 +450,7 @@ export default function BlogPage() {
                 Ir para o E-commerce
                 <ArrowRight size={18} />
               </a>
-              <a
-                href="#mapa"
-                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white font-bold px-6 py-3.5 rounded-xl hover:bg-white hover:text-[#072B63] transition-all"
-              >
-                Como chegar na loja
-              </a>
+           
             </div>
           </div>
         </div>

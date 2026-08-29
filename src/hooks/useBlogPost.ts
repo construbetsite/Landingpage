@@ -29,7 +29,7 @@ export function useBlogPost(slug?: string): UseBlogPostResult {
     queryKey: ["blogPost", cleanSlug],
     queryFn: async ({ signal }) => {
       if (!cleanSlug) return null;
-      return await blogApi.getPostBySlug(cleanSlug, signal);
+      return await blogApi.getPostBySlug(cleanSlug, true, { signal });
     },
     enabled: isEnabled,
     staleTime: 1000 * 60 * 5, // 5 minutos de dados frescos

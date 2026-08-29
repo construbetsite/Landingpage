@@ -17,6 +17,8 @@ import { SITE_URL } from "../../config/constants";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import type { Tokens } from "marked";
+import { LandingCategoriesSlider } from "../../components/blog/LandingCategoriesSlider";
+import { PostProductsGrid } from "../../components/blog/PostProductsGrid";
 
 // Configuração do renderer customizado para tabelas com classes Tailwind
 const renderer = new marked.Renderer();
@@ -104,7 +106,12 @@ export default function BlogPostDetail() {
 
   // Estados de carregamento/erro
   if (loading) {
-    return <LoadingSkeleton />;
+    return (
+      <>
+        <LandingCategoriesSlider />
+        <LoadingSkeleton />
+      </>
+    );
   }
 
   if (notFound || (!post && !error)) {
@@ -157,7 +164,9 @@ export default function BlogPostDetail() {
         }}
       />
 
-      <article className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14 pt-20 md:pt-24">
+      <LandingCategoriesSlider />
+
+      <article className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
         {/* Botão voltar com margem extra para não ficar atrás do header */}
         <Link
           to="/blog"
@@ -283,6 +292,8 @@ export default function BlogPostDetail() {
           </div>
         )}
 
+        <PostProductsGrid products={post.products} />
+
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <div className="mt-10 border-t border-slate-200 pt-6">
@@ -306,7 +317,7 @@ export default function BlogPostDetail() {
 // Componentes auxiliares
 function LoadingSkeleton() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 md:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
       <div className="animate-pulse space-y-4">
         <div className="h-4 w-24 rounded bg-slate-200" />
         <div className="h-10 w-3/4 rounded bg-slate-200" />
@@ -315,6 +326,9 @@ function LoadingSkeleton() {
           <div className="h-4 w-full rounded bg-slate-100" />
           <div className="h-4 w-5/6 rounded bg-slate-100" />
           <div className="h-4 w-2/3 rounded bg-slate-100" />
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, index) => <div key={index} className="h-72 rounded-lg bg-slate-100" />)}
         </div>
       </div>
     </div>

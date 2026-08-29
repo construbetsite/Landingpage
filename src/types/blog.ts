@@ -21,6 +21,27 @@ export interface BlogCategoria {
 // BLOG POST
 // ============================================================
 
+export interface BlogPostProduct {
+  id: string;
+  name: string;
+  price: number | null;
+  imageUrl?: string | null;
+  redirectUrl?: string | null;
+  categoryId?: string | null;
+  commercialType?: string;
+  featured?: boolean;
+  displayOrder?: number;
+  active?: boolean;
+}
+
+export interface LandingCategory {
+  id: string;
+  title: string;
+  image?: string | null;
+  url: string;
+  order: number;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -53,6 +74,7 @@ export interface BlogPost {
   created_at: string;
   updated_at: string;
   published_at: string | null;
+  products?: BlogPostProduct[];
 }
 
 // ============================================================

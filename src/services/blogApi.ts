@@ -7,6 +7,7 @@ import type {
   BlogListResponse,
   ListBlogPostsParams,
   BlogPost,
+  LandingCategory,
 } from "../types/blog";
 
 const API_BASE = (
@@ -14,6 +15,7 @@ const API_BASE = (
 ).replace(/\/+$/, "");
 
 const DEFAULT_TIMEOUT_MS = 15_000;
+const LANDING_API_BASE = (import.meta.env.VITE_API_BASE || "http://localhost:3000/api").replace(/\/+$/, "");
 
 // ============================================================
 // ERRO DA API
@@ -231,15 +233,11 @@ export async function getFeaturedPosts(
 
 export async function getPostBySlug(
   slug: string,
-  optionsOrSignal?: BlogRequestOptions | AbortSignal
+  includeProducts = true,
+  options: BlogRequestOptions = {}
 ): Promise<BlogPost | null> {
-  const options: BlogRequestOptions =
-    optionsOrSignal instanceof AbortSignal
-      ? { signal: optionsOrSignal }
-      : optionsOrSignal || {};
-
   const encodedSlug = encodeURIComponent(slug);
-  const endpoint = `/posts/slug/${encodedSlug}`;
+  const endpoint = `/posts/slug/${encodedSlug}${includeProducts ? "?include=products" : ""}`;
 
   try {
     const response = await request<BlogItemResponse>(
@@ -285,7 +283,24 @@ export async function getPostBySlug(
 }
 
 // ============================================================
-// CATEGORIAS
+// CATEGORIAS DA LANDING
+// ============================================================
+
+export async function getLandingCategories(): Promise<LandingCategory[]> {
+  const response = await fetch(`${LANDING_API_BASE}/landing/categories`, {
+    headers: { Accept: "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new BlogApiError("Não foi possível carregar as categorias.", response.status);
+  }
+
+  const body = (await response.json()) as { data?: LandingCategory[] } | LandingCategory[];
+  return Array.isArray(body) ? body : body.data ?? [];
+}
+
+// ============================================================
+// CATEGORIAS DO BLOG
 // ============================================================
 
 export async function getCategories(
@@ -308,5 +323,6 @@ export const blogApi = {
   getPosts,
   getFeaturedPosts,
   getPostBySlug,
+  getLandingCategories,
   getCategories,
 };

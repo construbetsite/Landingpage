@@ -31,7 +31,8 @@ import CentralDaObra from "./components/CentralDaObra/CentralDaObra";
 import PromocoesSemana from "./components/sections/PromocoesSemana";
 import NossaHistoria from "./components/NossaHistoria/NossaHistoria";
 import EcommerceBanner from "./components/EcommerceBanner/EcommerceBanner";
-
+import { LandingCategoriesSlider } from "./components/blog/LandingCategoriesSlider";
+import EcomeercePromoCategories from "./components/EcommercePromoCategories/EcommercePromoCategories"
 // =====================================================
 // CODE-SPLITTING: páginas carregadas sob demanda
 // =====================================================
@@ -136,6 +137,8 @@ function AppContent() {
               <main className="pt-16 min-h-screen flex flex-col">
                 <Hero />
                 <ScrollingTicker />
+                <EcomeercePromoCategories/>
+                <LandingCategoriesSlider />
                 <FeaturesBar />
                 <FeaturedProducts />
                 <EcommerceBanner />
@@ -158,11 +161,12 @@ function AppContent() {
                 </div>
 
                 <GoogleReviewsWidget />
-                <SocialMediaSection />
                 <ScrollingTicker />
                 <div id="contato" className="px-4 sm:px-6 lg:px-8">
                   <ContactForm />
                 </div>
+                <SocialMediaSection />
+
               </main>
             </>
           }
