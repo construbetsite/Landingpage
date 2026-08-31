@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPosts } from "../services/blogApi";
+import { DATA_STALE_TIME } from "../lib/queryClient";
 import type { BlogPost, ListBlogPostsParams, Pagination } from "../types/blog";
 
 export interface UseBlogPostsResult {
@@ -36,7 +37,7 @@ export function useBlogPosts(
         { signal }
       );
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime: DATA_STALE_TIME, // 1 min — alinhado ao max-age=60 do backend
   });
 
   return {

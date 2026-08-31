@@ -14,76 +14,363 @@ import { formatDate } from "../../utils/formatDate";
 import { getImageUrl } from "../../utils/imageUrl";
 import SEO from "../../components/SEO/SEO";
 import { SITE_URL } from "../../config/constants";
-import DOMPurify from "dompurify";
-import { marked } from "marked";
-import type { Tokens } from "marked";
+import DOMPurify, { type Config } from "dompurify";
 import { LandingCategoriesSlider } from "../../components/blog/LandingCategoriesSlider";
 import { PostProductsGrid } from "../../components/blog/PostProductsGrid";
 
-// Configuração do renderer customizado para tabelas com classes Tailwind
-const renderer = new marked.Renderer();
+/* ============================================================
+   RICH CONTENT — HTML PURO (sem Markdown)
+   O conteúdo vem do painel como HTML direto. Apenas sanitizamos
+   com DOMPurify (config restritiva) e aplicamos estilos prose.
+   Memoizado: a sanitização roda apenas quando o conteúdo muda.
+============================================================ */
 
-// Sobrescreve a renderização de tabelas (API atual)
-renderer.table = (token: Tokens.Table) => {
-  const headerHtml = token.header
-    .map((cell) => {
-      const text = cell.text || "";
-      return `<th class="border border-slate-300 dark:border-slate-700 px-4 py-2 text-left font-semibold text-slate-800 dark:text-slate-200">${text}</th>`;
-    })
-    .join("");
+const SANITIZE_CONFIG = {
+  ADD_TAGS: [
+    "iframe",
+    "section",
+    "figure",
+    "figcaption",
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
+    "caption",
+    "colgroup",
+    "col",
+  ],
+  ADD_ATTR: [
+    "allow",
+    "allowfullscreen",
+    "frameborder",
+    "scrolling",
+    "loading",
+    "decoding",
+    "target",
+    "colspan",
+    "rowspan",
+    "style",
+    "class",
+    "id",
+    "scope",
+    "align",
+    "valign",
+    "cellpadding",
+    "cellspacing",
+    "border",
+  ],
+  FORBID_ATTR: ["srcset"],
+} as const satisfies Config;
 
-  const bodyHtml = token.rows
-    .map((row) => {
-      const cells = row
-        .map((cell) => {
-          const text = cell.text || "";
-          return `<td class="border border-slate-300 dark:border-slate-700 px-4 py-2 text-left text-slate-700 dark:text-slate-300">${text}</td>`;
-        })
-        .join("");
-      return `<tr>${cells}</tr>`;
-    })
-    .join("");
+function addImageLazyLoading(html: string): string {
+  return html
+    .replace(/<img(?![^>]*\bloading=)/gi, '<img loading="lazy"')
+    .replace(/<img(?![^>]*\bdecoding=)/gi, '<img decoding="async"');
+}
 
-  return `<div class="overflow-x-auto my-4">
-    <table class="min-w-full border-collapse border border-slate-300 dark:border-slate-700">
-      <thead class="bg-slate-100 dark:bg-slate-800">${headerHtml}</thead>
-      <tbody>${bodyHtml}</tbody>
-    </table>
-  </div>`;
-};
-
-// Configuração global do marked
-marked.setOptions({
-  renderer,
-  gfm: true,      // GitHub Flavored Markdown (tabelas, listas de tarefas)
-  breaks: true,   // Quebras de linha com \n viram <br>
-  pedantic: false,
-});
-
-// Componente memoizado com conversão Markdown → HTML seguro
 const RichContent = React.memo(({ content }: { content?: string }) => {
+  const sanitizedHtml = useMemo(() => {
+    if (!content) return "";
+    const clean = DOMPurify.sanitize(content, { ...SANITIZE_CONFIG }) as string;
+    return addImageLazyLoading(clean);
+  }, [content]);
+
   if (!content) {
-    return <p className="text-slate-600">Conteúdo não disponível para este post.</p>;
+    return <p className="text-slate-600 dark:text-slate-400">Conteúdo não disponível para este post.</p>;
   }
 
-  // Converte Markdown para HTML
-  const rawHtml = marked.parse(content) as string;
-  // Sanitiza para evitar XSS
-  const sanitizedHtml = DOMPurify.sanitize(rawHtml);
-
   return (
-    <div
-      className="prose prose-slate max-w-none
-        prose-headings:font-bold prose-headings:text-slate-900
-        prose-p:leading-relaxed prose-p:mb-4 prose-p:text-slate-700
-        prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
-        prose-strong:text-slate-900 prose-strong:font-semibold
-        prose-ul:my-4 prose-li:mb-1
-        prose-img:rounded-xl prose-img:shadow-md
-        prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-slate-600
-        dark:prose-invert dark:prose-p:text-slate-300 dark:prose-headings:text-slate-100"
-      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-    />
+    <>
+      {/* Estilos forçados para contraste máximo e suporte completo a tabelas */}
+      <style>{`
+        /* ================================================
+                   ESTILOS BASE (MODO CLARO E ESCURO)
+                ================================================ */
+
+        .blog-content {
+          max-width: 100%;
+          color: #0f172a; /* slate-900 */
+        }
+
+        /* --- PARÁGRAFOS, LISTAS E TEXTOS GERAIS --- */
+        .blog-content p,
+        .blog-content li,
+        .blog-content figcaption,
+        .blog-content caption {
+          color: #0f172a !important;
+          line-height: 1.75 !important;
+          margin-bottom: 1rem !important;
+        }
+
+        .dark .blog-content p,
+        .dark .blog-content li,
+        .dark .blog-content figcaption,
+        .dark .blog-content caption {
+          color: #f1f5f9 !important; /* slate-100 */
+        }
+
+        /* --- TÍTULOS (H1-H6) --- */
+        .blog-content h1,
+        .blog-content h2,
+        .blog-content h3,
+        .blog-content h4,
+        .blog-content h5,
+        .blog-content h6 {
+          color: #0f172a !important;
+          font-weight: 700 !important;
+          line-height: 1.3 !important;
+          margin-top: 1.5rem !important;
+          margin-bottom: 0.75rem !important;
+        }
+
+        .blog-content h1 { font-size: 2.25rem !important; }
+        .blog-content h2 { font-size: 1.875rem !important; }
+        .blog-content h3 { font-size: 1.5rem !important; }
+        .blog-content h4 { font-size: 1.25rem !important; }
+        .blog-content h5 { font-size: 1.125rem !important; }
+        .blog-content h6 { font-size: 1rem !important; }
+
+        .dark .blog-content h1,
+        .dark .blog-content h2,
+        .dark .blog-content h3,
+        .dark .blog-content h4,
+        .dark .blog-content h5,
+        .dark .blog-content h6 {
+          color: #f1f5f9 !important;
+        }
+
+        /* --- LINKS --- */
+        .blog-content a {
+          color: #2563eb !important; /* blue-600 */
+          text-decoration: underline !important;
+          text-underline-offset: 2px !important;
+        }
+        .blog-content a:hover {
+          text-decoration: none !important;
+        }
+
+        .dark .blog-content a {
+          color: #60a5fa !important; /* blue-400 */
+        }
+
+        /* --- NEGRITO / STRONG --- */
+        .blog-content strong,
+        .blog-content b {
+          color: #0f172a !important;
+          font-weight: 700 !important;
+        }
+
+        .dark .blog-content strong,
+        .dark .blog-content b {
+          color: #f1f5f9 !important;
+        }
+
+        /* --- ITÁLICO / EM --- */
+        .blog-content em,
+        .blog-content i {
+          font-style: italic !important;
+        }
+
+        /* --- LISTAS --- */
+        .blog-content ul,
+        .blog-content ol {
+          padding-left: 1.5rem !important;
+          margin-bottom: 1rem !important;
+        }
+
+        .blog-content ul {
+          list-style-type: disc !important;
+        }
+
+        .blog-content ol {
+          list-style-type: decimal !important;
+        }
+
+        .blog-content li {
+          margin-bottom: 0.25rem !important;
+        }
+
+        /* --- CITAÇÕES (BLOCKQUOTE) --- */
+        .blog-content blockquote {
+          border-left: 4px solid #3b82f6 !important; /* blue-500 */
+          padding-left: 1rem !important;
+          padding-top: 0.5rem !important;
+          padding-bottom: 0.5rem !important;
+          margin: 1rem 0 !important;
+          color: #334155 !important; /* slate-700 */
+          font-style: italic !important;
+          background-color: #f8fafc !important;
+          border-radius: 0.5rem !important;
+          padding-right: 1rem !important;
+        }
+
+        .dark .blog-content blockquote {
+          color: #94a3b8 !important; /* slate-400 */
+          background-color: #1e293b !important; /* slate-800 */
+        }
+
+        /* --- IMAGENS --- */
+        .blog-content img {
+          max-width: 100% !important;
+          height: auto !important;
+          border-radius: 0.75rem !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+          margin: 1.5rem 0 !important;
+          display: block !important;
+        }
+
+        /* --- TABELAS (COMPLETO) --- */
+        .blog-content table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+          margin: 1.5rem 0 !important;
+          font-size: 0.95rem !important;
+          overflow-x: auto !important;
+          display: block !important;
+          max-width: 100% !important;
+        }
+
+        .blog-content thead {
+          background-color: #f1f5f9 !important; /* slate-100 */
+        }
+
+        .dark .blog-content thead {
+          background-color: #1e293b !important; /* slate-800 */
+        }
+
+        .blog-content th {
+          font-weight: 700 !important;
+          text-align: left !important;
+          padding: 0.75rem 1rem !important;
+          border: 1px solid #cbd5e1 !important; /* slate-300 */
+          color: #0f172a !important;
+        }
+
+        .dark .blog-content th {
+          border-color: #475569 !important; /* slate-600 */
+          color: #f1f5f9 !important;
+        }
+
+        .blog-content td {
+          padding: 0.75rem 1rem !important;
+          border: 1px solid #cbd5e1 !important; /* slate-300 */
+          color: #0f172a !important;
+        }
+
+        .dark .blog-content td {
+          border-color: #475569 !important; /* slate-600 */
+          color: #e2e8f0 !important; /* slate-200 */
+        }
+
+        .blog-content tbody tr {
+          background-color: #ffffff !important;
+        }
+
+        .dark .blog-content tbody tr {
+          background-color: #0f172a !important; /* slate-900 */
+        }
+
+        /* Zebra striping nas tabelas (opcional) */
+        .blog-content tbody tr:nth-child(even) {
+          background-color: #f8fafc !important;
+        }
+
+        .dark .blog-content tbody tr:nth-child(even) {
+          background-color: #1e293b !important; /* slate-800 */
+        }
+
+        .blog-content caption {
+          caption-side: bottom !important;
+          padding: 0.5rem !important;
+          color: #475569 !important;
+          font-size: 0.875rem !important;
+        }
+
+        .dark .blog-content caption {
+          color: #94a3b8 !important;
+        }
+
+        /* --- CÓDIGO INLINE --- */
+        .blog-content code {
+          background-color: #f1f5f9 !important;
+          padding: 0.125rem 0.375rem !important;
+          border-radius: 0.25rem !important;
+          font-family: monospace !important;
+          font-size: 0.9em !important;
+          color: #0f172a !important;
+        }
+
+        .dark .blog-content code {
+          background-color: #1e293b !important;
+          color: #e2e8f0 !important;
+        }
+
+        /* --- BLOCO DE CÓDIGO (PRE) --- */
+        .blog-content pre {
+          background-color: #0f172a !important;
+          color: #f1f5f9 !important;
+          padding: 1rem !important;
+          border-radius: 0.75rem !important;
+          overflow-x: auto !important;
+          margin: 1.5rem 0 !important;
+          font-family: monospace !important;
+          font-size: 0.9rem !important;
+        }
+
+        .blog-content pre code {
+          background-color: transparent !important;
+          color: #f1f5f9 !important;
+          padding: 0 !important;
+        }
+
+        /* --- IFRAME / VÍDEOS --- */
+        .blog-content iframe {
+          border-radius: 0.75rem !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+          margin: 1.5rem 0 !important;
+          max-width: 100% !important;
+        }
+
+        /* --- DIVISORES (HR) --- */
+        .blog-content hr {
+          border: 0 !important;
+          height: 1px !important;
+          background: #e2e8f0 !important;
+          margin: 2rem 0 !important;
+        }
+
+        .dark .blog-content hr {
+          background: #334155 !important;
+        }
+
+        /* --- FIGURAS --- */
+        .blog-content figure {
+          margin: 1.5rem 0 !important;
+        }
+
+        .blog-content figcaption {
+          font-size: 0.875rem !important;
+          color: #475569 !important;
+          text-align: center !important;
+          margin-top: 0.5rem !important;
+        }
+
+        .dark .blog-content figcaption {
+          color: #94a3b8 !important;
+        }
+      `}</style>
+
+      <div
+        className="blog-content prose prose-slate max-w-none
+          prose-table:min-w-full prose-table:border-collapse
+          prose-pre:bg-slate-900 prose-pre:text-slate-100
+          prose-code:before:content-none prose-code:after:content-none
+          dark:prose-invert"
+        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+      />
+    </>
   );
 });
 
@@ -100,11 +387,9 @@ export default function BlogPostDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { post, loading, error, notFound } = useBlogPost(slug);
 
-  // Memoização dos vídeos
   const video1Embed = useMemo(() => getYouTubeEmbed(post?.video1), [post?.video1]);
   const video2Embed = useMemo(() => getYouTubeEmbed(post?.video2), [post?.video2]);
 
-  // Estados de carregamento/erro
   if (loading) {
     return (
       <>
@@ -167,7 +452,6 @@ export default function BlogPostDetail() {
       <LandingCategoriesSlider />
 
       <article className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
-        {/* Botão voltar com margem extra para não ficar atrás do header */}
         <Link
           to="/blog"
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-[#004AAD] transition-colors"
@@ -219,7 +503,6 @@ export default function BlogPostDetail() {
           </div>
         </header>
 
-        {/* Imagem de destaque */}
         {post.image_url && (
           <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 shadow-md">
             <img
@@ -234,7 +517,6 @@ export default function BlogPostDetail() {
           </div>
         )}
 
-        {/* Autor */}
         {post.author && post.author_image && (
           <div className="mt-6 flex items-center gap-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-5 border border-slate-200 dark:border-slate-700">
             <img
@@ -255,12 +537,10 @@ export default function BlogPostDetail() {
           </div>
         )}
 
-        {/* Conteúdo principal (agora com Markdown) */}
         <div className="mt-10">
           <RichContent content={post.content} />
         </div>
 
-        {/* Vídeos */}
         {(video1Embed || video2Embed) && (
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {video1Embed && (
@@ -294,7 +574,6 @@ export default function BlogPostDetail() {
 
         <PostProductsGrid products={post.products} />
 
-        {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <div className="mt-10 border-t border-slate-200 pt-6">
             <div className="flex flex-wrap gap-2">
@@ -314,7 +593,6 @@ export default function BlogPostDetail() {
   );
 }
 
-// Componentes auxiliares
 function LoadingSkeleton() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">

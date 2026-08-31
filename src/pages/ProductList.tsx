@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from '../components/SEO/SEO';
 import { ProductGridSkeleton } from '../components/Skeletons/Skeletons';
-
+import { LandingCategoriesSlider } from '../components/blog/LandingCategoriesSlider';
 export default function ProductList() {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
 
@@ -167,6 +167,8 @@ export default function ProductList() {
           ))}
         </div>
       )}
+
+      <LandingCategoriesSlider />
     </div>
   );
 }

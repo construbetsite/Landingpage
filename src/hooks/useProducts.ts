@@ -1,6 +1,7 @@
 // src/hooks/useProducts.ts
 import { useQuery } from '@tanstack/react-query';
 import { getProducts } from '../services/api/products';
+import { DATA_STALE_TIME } from '../lib/queryClient';
 import type { Product } from '../types/types';
 
 export interface ProductFilters {
@@ -18,7 +19,7 @@ export function useProducts(params?: ProductFilters) {
         active: params?.active ?? true,
         ...params,
       }),
-    staleTime: 1000 * 60 * 5,
+    staleTime: DATA_STALE_TIME, // 1 min — alinhado ao max-age=60 do backend
   });
 
   return {

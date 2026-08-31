@@ -2,31 +2,57 @@
 
 import { useEffect, useRef } from "react";
 import { Star, MessageCircle, ThumbsUp, Users } from "lucide-react";
+import { useInView } from "../../hooks/useInView";
 
-export default function GoogleReviewsWidget() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Carrega o script do Elfsight apenas uma vez
+/** Injeta o script do Elfsight uma única vez (idempotente). */
+function loadElfsightScript() {
+  if (!document.querySelector('script[src="https://elfsightcdn.com/platform.js"]')) {
     const script = document.createElement("script");
     script.src = "https://elfsightcdn.com/platform.js";
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
+  }
+}
+
+export default function GoogleReviewsWidget() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [sectionRef, inView] = useInView<HTMLElement>({
+    // Só carrega o script externo quando a seção está prestes a aparecer.
+    // Evita que o Elfsight (rede externa) dispute banda com produtos/posts.
+    rootMargin: "400px",
+  });
+
+  useEffect(() => {
+    if (!inView) return;
+
+    // Carrega o script do Elfsight apenas uma vez, somente quando a seção
+    // está (quase) visível E o navegador está ocioso — dando prioridade ao
+    // conteúdo principal (produtos/posts) e sem impactar o LCP.
+    const w = window as unknown as {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    let id: number | ReturnType<typeof setTimeout>;
+    if (typeof w.requestIdleCallback === "function") {
+      id = w.requestIdleCallback(() => loadElfsightScript(), { timeout: 3000 });
+    } else {
+      id = setTimeout(loadElfsightScript, 200);
+    }
 
     return () => {
-      // Remove o script ao desmontar
-      const scriptElement = document.querySelector(
-        'script[src="https://elfsightcdn.com/platform.js"]'
-      );
-      if (scriptElement) {
-        scriptElement.remove();
+      if (typeof w.cancelIdleCallback === "function" && typeof id === "number") {
+        w.cancelIdleCallback(id);
+      } else {
+        clearTimeout(id as ReturnType<typeof setTimeout>);
       }
     };
-  }, []);
+  }, [inView]);
 
   return (
     <section
+      ref={sectionRef}
       id="avaliacoes"
       className="w-full bg-gradient-to-b from-white to-blue-50 py-16 md:py-20 lg:py-24"
       aria-labelledby="avaliacoes-title"
@@ -63,7 +89,7 @@ export default function GoogleReviewsWidget() {
             </div>
             <span className="text-2xl md:text-3xl font-bold text-[#072B63]">
               4.6
-            
+
             </span>
             <p className="text-xs md:text-sm text-gray-500">Avaliação média</p>
           </div>

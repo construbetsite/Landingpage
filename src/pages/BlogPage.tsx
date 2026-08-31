@@ -25,6 +25,7 @@ import { useBlogPosts } from "../hooks/useBlogPosts";
 import { useBlogCategories } from "../hooks/useBlogCategories";
 import type { BlogPost } from "../types/blog";
 import { getImageUrl } from "../utils/imageUrl";
+import { LandingCategoriesSlider } from "../components/blog/LandingCategoriesSlider";
 
 const PLACEHOLDER_IMAGE =
   "https://placehold.co/800x500/E8EEF5/072B63?text=Construbet+Blog";
@@ -241,7 +242,10 @@ export default function BlogPage() {
       <SEO
         title={activeCategory ? `Blog - ${activeCategory} | Construbet` : "Blog Construbet | Dicas e conteúdos para sua obra"}
         description="Artigos, dicas práticas e respostas para as dúvidas mais comuns sobre materiais de construção, acabamento e execução de obras."
-        canonical={activeCategory ? `/blog?categoria=${encodeURIComponent(activeCategory)}` : "/blog"}
+        // Filtros e busca são estados de UX, não páginas de destino orgânico.
+        // Mantém uma URL canônica única e evita indexação de duplicatas.
+        canonical="/blog"
+        noIndex={Boolean(activeCategory || search.trim())}
       />
 
       {/*  */}
@@ -302,11 +306,10 @@ export default function BlogPage() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setCategory(null)}
-              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
-                !activeCategory
+              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${!activeCategory
                   ? "bg-[#072B63] text-white shadow-md"
                   : "bg-white text-[#072B63] border border-gray-200 hover:border-red-400"
-              }`}
+                }`}
             >
               Todos
             </button>
@@ -314,11 +317,10 @@ export default function BlogPage() {
               <button
                 key={cat.id}
                 onClick={() => setCategory(cat.nome)}
-                className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
-                  activeCategory === cat.nome
+                className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${activeCategory === cat.nome
                     ? "bg-[#072B63] text-white shadow-md"
                     : "bg-white text-[#072B63] border border-gray-200 hover:border-red-400"
-                }`}
+                  }`}
               >
                 {cat.nome}
               </button>
@@ -450,11 +452,13 @@ export default function BlogPage() {
                 Ir para o E-commerce
                 <ArrowRight size={18} />
               </a>
-           
+
             </div>
           </div>
         </div>
       </section>
+      <LandingCategoriesSlider />
+
     </main>
   );
 }

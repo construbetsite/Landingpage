@@ -1,5 +1,4 @@
 
-
 import type {
   BlogCategoria,
   BlogCategoriaListResponse,
@@ -9,6 +8,7 @@ import type {
   BlogPost,
   LandingCategory,
 } from "../types/blog";
+import { fetchWithCache, TTL } from "../lib/externalCache";
 
 const API_BASE = (
   import.meta.env.VITE_API_URL
@@ -287,16 +287,24 @@ export async function getPostBySlug(
 // ============================================================
 
 export async function getLandingCategories(): Promise<LandingCategory[]> {
-  const response = await fetch(`${LANDING_API_BASE}/landing/categories`, {
-    headers: { Accept: "application/json" },
-  });
+  // Cache local com TTL de 1h + stale-while-revalidate (externalCache.ts):
+  // visitas repetidas são servidas instantaneamente do localStorage.
+  return fetchWithCache(
+    "landing-categories",
+    async () => {
+      const response = await fetch(`${LANDING_API_BASE}/landing/categories`, {
+        headers: { Accept: "application/json" },
+      });
 
-  if (!response.ok) {
-    throw new BlogApiError("Não foi possível carregar as categorias.", response.status);
-  }
+      if (!response.ok) {
+        throw new BlogApiError("Não foi possível carregar as categorias.", response.status);
+      }
 
-  const body = (await response.json()) as { data?: LandingCategory[] } | LandingCategory[];
-  return Array.isArray(body) ? body : body.data ?? [];
+      const body = (await response.json()) as { data?: LandingCategory[] } | LandingCategory[];
+      return Array.isArray(body) ? body : body.data ?? [];
+    },
+    TTL.ONE_HOUR
+  );
 }
 
 // ============================================================

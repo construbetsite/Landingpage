@@ -10,6 +10,9 @@ text-size-adjust: 100%;
 
 @import "tailwindcss";
 
+/* Plugin Typography (Tailwind v4) — ativa as classes prose usadas no RichContent do BlogPostDetail */
+@plugin "@tailwindcss/typography";
+
 /* Camada utilities */
 @tailwind utilities;
 

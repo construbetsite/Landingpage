@@ -1,6 +1,14 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { SITE_URL, COMPANY_INFO } from '../../config/constants';
+
+/** Concatena base + caminho evitando duplicar barras. */
+function joinUrl(base: string, path: string): string {
+  const baseClean = base.replace(/\/+$/, '');
+  const pathClean = path.startsWith('/') ? path : `/${path}`;
+  return `${baseClean}${pathClean}`;
+}
 
 export interface SEOProps {
   title?: string;
@@ -37,13 +45,16 @@ export const SEO: React.FC<SEOProps> = ({
       : `${title} | Construbet`
     : 'Construbet | Materiais para Construção em Betim - MG';
 
+  // URL canônica determinística: derivada do pathname do roteador, NUNCA de
+  // window.location.href (evita duplicatas por parâmetros de tracking/UTM).
+  const location = useLocation();
+  const pathname = location.pathname.replace(/\/+$/, '') || '/';
+
   const fullCanonical = canonical
     ? canonical.startsWith('http')
       ? canonical
       : `${SITE_URL}${canonical.startsWith('/') ? canonical : `/${canonical}`}`
-    : typeof window !== 'undefined'
-      ? window.location.href
-      : SITE_URL;
+    : joinUrl(SITE_URL, pathname);
 
   const fullUrl = url
     ? url.startsWith('http')

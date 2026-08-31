@@ -13,9 +13,9 @@ export type ConsentStatus = 'granted' | 'denied' | 'custom' | null;
 
 const CONSENT_STORAGE_KEY = 'construbet_cookie_consent';
 const PREFERENCES_STORAGE_KEY = 'construbet_cookie_preferences';
-/** Cookie próprio de consentimento (LGPD): validade de 1 ano. */
+/** Cookie próprio de consentimento (LGPD): validade de 1 dia (24h). */
 export const CONSENT_COOKIE_NAME = 'cookie_consent';
-const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 ano em segundos
+export const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24; // 86400 segundos = 1 dia
 const CONSENT_EVENT = 'construbet_cookie_consent_change';
 
 export const DEFAULT_PREFERENCES: CookiePreferences = {
@@ -26,7 +26,7 @@ export const DEFAULT_PREFERENCES: CookiePreferences = {
 };
 
 /**
- * Lê o cookie_consent (com validade de 1 ano).
+ * Lê o cookie_consent (com validade de 1 dia).
  */
 function readConsentCookie(): string | null {
   if (typeof document === 'undefined') return null;
@@ -37,7 +37,7 @@ function readConsentCookie(): string | null {
 }
 
 /**
- * Grava o cookie de consentimento com validade de 1 ano.
+ * Grava o cookie de consentimento com validade de 1 dia.
  */
 function writeConsentCookie(status: string) {
   if (typeof document === 'undefined') return;
@@ -96,7 +96,7 @@ export function setCookieConsent(
   if (typeof window === 'undefined') return;
 
   localStorage.setItem(CONSENT_STORAGE_KEY, status);
-  writeConsentCookie(status); // Cookie próprio com validade de 1 ano
+  writeConsentCookie(status); // Cookie próprio com validade de 1 dia
   const updatedPrefs: CookiePreferences = {
     necessary: true,
     analytics: status === 'granted' ? true : status === 'denied' ? false : !!preferences?.analytics,
